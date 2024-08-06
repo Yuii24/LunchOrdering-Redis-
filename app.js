@@ -12,6 +12,10 @@ app.get('/', (req, res) => {
   res.render('index')
 })
 
+app.get('/oder', (req, res) => {
+  res.render('index')
+})
+
 
 
 app.listen(port, () => {
