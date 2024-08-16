@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "yuisqlpassword",
-    "database": "database_development",
+    "database": "ordering",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },

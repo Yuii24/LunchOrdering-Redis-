@@ -1,23 +1,33 @@
 const express = require('express')
+const routes = require('./routes')
+const session = require('express-session')
+const flash = require('connect-flash')
 const { engine } = require('express-handlebars')
 const app = express()
 const port = 3000
 
+const SESSION_SECRET = 'secret'
+
 app.engine('.hbs', engine({ extname: '.hbs' }))
 app.set('view engine', '.hbs')
 app.set('views', './views')
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
+
+app.use(session({ secret: SESSION_SECRET, resave: false, saveUninitialized: false }))
+app.use(flash())
 
 
-app.get('/', (req, res) => {
-  res.render('index')
+app.use((req, res, next) => {
+  res.locals.success_messages = req.flash('success_messages')
+  res.locals.error_messages = req.flash('error_messages')
+  next()
 })
 
-app.get('/ordering', (req, res) => {
-  res.render('ordering')
-})
-
-
+app.use(routes)
 
 app.listen(port, () => {
   console.log(`server run on http://localhost:${port}`);
 })
+
+module.exports = app
