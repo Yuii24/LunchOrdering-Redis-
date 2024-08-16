@@ -5,9 +5,11 @@ const orderController = {
     res.render('ordering')
   },
   postOrder: (req, res, next) => {
-    throw new Error('错误消息');
     const { name, employeeId, description } = req.body
-    console.log('name', name)
+    
+    if (!name) throw new Error('請輸入姓名')
+    if (!employeeId) throw new Error('請輸入員工編號')
+    if (!description) throw new Error('你的訂單是空白的喔...')
 
     return Order.create({
       name,
