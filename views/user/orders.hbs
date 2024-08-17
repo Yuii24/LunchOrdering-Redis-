@@ -1,45 +1,28 @@
 <br>
+<a href='/admin/restaurants/create'>
+  <button type="button" class="btn btn-primary">New Restaurant</button>
+</a>
 <br />
 <br />
 <table class="table align-middle">
   <thead class="thead-dark">
     <tr>
-      <th scope="col">#</th>
+      <th scope="col">訂單日期</th>
       <th scope="col">Name</th>
-      <th scope="col">email</th>
-      <th scope="col">Role</th>
-      <th scope="col">#</th>
+      <th scope="col">Category</th>
+      <th scope="col"></th>
     </tr>
   </thead>
   <tbody>
-    {{#each users}}
     <tr>
-      <th scope="row">{{this.id}}</th>
+      {{#each orders}}
+      <th scope="row">{{this.formattedDate}}</th>
       <td>{{this.name}}</td>
-      <td>{{this.email}}</td>
-      {{#if this.isAdmin}}
-      <td>Admin</td>
+      <td>{{this.employeeId}}</td>
       <td>
-        <form action="/admin/users/{{this.id}}?_method=PATCH" method="POST" style="display: inline;">
-          <button type="submit" class="btn btn-link">
-            Set as a User
-          </button>
-        </form>
-      </td>
-      {{else}}
-      <td>User</td>
-      <td>
-        <form action="/admin/users/{{this.id}}?_method=PATCH" method="POST" style="display: inline;">
-          <button type="submit" class="btn btn-link">
-            Set as a Admin
-          </button>
-        </form>
-      </td>
-      {{/if}}
-      {{!-- <td>
         <button type="button" class="btn btn-link">
           <a class="btn btn-link link-primary" href="/admin/restaurants/{{this.id}}">
-            Set as a User
+            Show
           </a>
         </button>
         <button type="button" class="btn btn-link">
@@ -51,7 +34,7 @@
           <button type="submit" class="btn btn-link link-danger"
             onclick="return confirm(`確定要刪除 {{ this.name }} 嗎？`)">Delete</button>
         </form>
-      </td> --}}
+      </td>
     </tr>
     {{/each}}
   </tbody>
