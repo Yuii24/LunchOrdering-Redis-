@@ -1,0 +1,40 @@
+{{!-- <br>
+<a href='/signup'>
+  <button type="button" class="btn btn-primary">新增使用者</button>
+</a>
+<br />
+<br /> --}}
+<table class="table align-middle">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col" style="width: 20%">訂單日期</th>
+      <th scope="col" style="width: 50%">訂單內容</th>
+      <th scope=" col">#</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      {{#each order}}
+      <td>{{this.name}}</td>
+      <td>{{this.description}}</td>
+      <td>
+        <button type="button" class="btn btn-link">
+          <a class="btn btn-link link-primary" href="/admin/restaurants/{{this.id}}">
+            Show
+          </a>
+        </button>
+        <button type="button" class="btn btn-link">
+          <a class="btn btn-link link-primary" href="/admin/restaurants/{{this.id}}/edit">
+            Edit
+          </a>
+        </button>
+        <form action="/admin/restaurants/{{this.id}}?_method=DELETE" method="POST" style="display: inline;">
+          <button type="submit" class="btn btn-link link-danger"
+            onclick="return confirm(`確定要刪除 {{ this.name }} 嗎？`)">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+<a class="btn btn-outline-secondary" href="javascript:history.back()">Back</a>

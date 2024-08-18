@@ -6,6 +6,7 @@ const { authenticatedAdmin } = require('../../middlewares/auth')
 const adminController = require('../../controllers/admin-controller')
 
 router.get('/allorders', authenticatedAdmin, adminController.getAllOrders)
+router.get('/dailyorder/:date', authenticatedAdmin, adminController.getDailyOrder)
 
 router.get('', (req, res) => res.redirect('/admin/allorders'))
 

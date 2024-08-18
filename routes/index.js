@@ -14,6 +14,7 @@ const { generalErrorHandler } = require('../middlewares/error-handler')
 router.use('/admin', admin)
 
 
+router.get('/test', userController.getTest)
 router.get('/signup', userController.signUpPage)
 router.post('/signup', userController.createUser)
 
@@ -22,9 +23,10 @@ router.post('/signin', passport.authenticate('local', { failureRedirect: '/signi
 
 router.get('/logout', userController.logout)
 
+router.get('/user/orders', authenticated, userController.getOrders)
+
 router.get('/ordering', authenticated, orderController.createOrder)
 router.post('/ordering', authenticated, orderController.postOrder)
-router.get('/user/orders', authenticated, userController.getOrders)
 
 router.get('/', (req, res) => {
   res.redirect('/ordering')

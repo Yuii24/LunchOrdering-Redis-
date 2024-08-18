@@ -1,4 +1,5 @@
 const { Order, User } = require('../models')
+const { sequelize } = require('../models')
 const { Op } = require('sequelize');
 const bcrypt = require('bcrypt')
 
@@ -56,13 +57,10 @@ const userController = {
       .catch(err => next(err))
   },
   getOrders: (req, res, next) => {
-    return Order.findAll({
-      raw: true,
-      nest: true
-    })
+    sequelize.query('SELECT * FROM orders', { type: sequelize.QueryTypes.SELECT })
       .then((orders) => {
         orders = orders.map(order => {
-          const date = new Date(order.createdAt)
+          const date = new Date(order.created_at)
           const year = date.getFullYear() - 1911
           const month = date.getMonth() + 1
           const day = date.getDate()
@@ -72,12 +70,38 @@ const userController = {
             formattedDate
           }
         })
-
-        console.log('orders', orders)
         return res.render('user/orders', { orders })
       })
       .catch(err => next(err))
+    // return Order.findAll({
+    //   raw: true,
+    //   nest: true
+    // })
+    //   .then((orders) => {
+    //     orders = orders.map(order => {
+    //       const date = new Date(order.createdAt)
+    //       const year = date.getFullYear() - 1911
+    //       const month = date.getMonth() + 1
+    //       const day = date.getDate()
+    //       const formattedDate = `${year}年${month}月${day}日`
+    //       return {
+    //         ...order,
+    //         formattedDate
+    //       }
+    //     })
+
+    //     console.log('orders', orders)
+    //     return res.render('user/orders', { orders })
+    //   })
+    //   .catch(err => next(err))
   },
+  getTest: (req, res, next) => {
+    sequelize.query("SELECT DATE_FORMAT(created_at, '%Y-%m-%d') AS unique_date FROM orders GROUP BY unique_date", { type: sequelize.QueryTypes.SELECT })
+      .then((test) => {
+        console.log(test)
+      })
+      .catch(err => next(err))
+  }
 }
 
 module.exports = userController
