@@ -1,0 +1,50 @@
+<div class="col-md-12">
+  <h1>{{restaurant.name}}</h1>
+  <p>電話:{{restaurant.tel}}</p>
+  <p>地址:{{restaurant.address}}</p>
+</div>
+<br>
+<a href='/admin/restaurants/{{restaurant.id}}/edit'>
+  <button type="button" class="btn btn-primary">變更餐廳資料</button>
+</a>
+<a href='/admin/restaurants/{{restaurant.id}}/createmeals' class="ms-5">
+  <button type="button" class="btn btn-primary">新增餐點</button>
+</a>
+<a href='/admin/restaurants/create' class="ms-5">
+  <button type="button" class="btn btn-primary">開放訂餐</button>
+</a>
+<br />
+<br />
+<table class="table align-middle">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">價格</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each restaurant.Meals}}
+    <tr>
+      <td>{{this.meals}}</td>
+      <td>{{this.price}}</td>
+      <td>
+        <button type="button" class="btn btn-link">
+          <a class="btn btn-link link-primary" href="/admin/restaurants/{{this.id}}">
+            Show
+          </a>
+        </button>
+        <button type="button" class="btn btn-link">
+          <a class="btn btn-link link-primary" href="/admin/restaurants/{{this.id}}/edit">
+            Edit
+          </a>
+        </button>
+        <form action="/admin/restaurants/{{this.id}}?_method=DELETE" method="POST" style="display: inline;">
+          <button type="submit" class="btn btn-link link-danger"
+            onclick="return confirm(`確定要刪除 {{ this.name }} 嗎？`)">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>

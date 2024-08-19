@@ -1,0 +1,28 @@
+<form action="/admin/restaurants/{{restaurant.id}}?_method=PUT" method="POST">
+  <div class="mb-4 text-center">
+    <h1 class="h3 font-weight-normal mb-3">變更餐廳資料</h1>
+  </div>
+  <div class="form-row mb-3">
+    <label class="form-label" for="name">店家名稱</label>
+    <input class="form-control" type="text" name="name" id="name" placeholder="請輸入店家名稱" value="{{restaurant.name}}"
+      required>
+  </div>
+  <div class="form-row mb-3">
+    <label class="form-label" for="tel">電話</label>
+    <input class="form-control" type="text" name="tel" id="employeeId" placeholder="請輸入電話" value="{{restaurant.tel}}"
+      required>
+  </div>
+  <div class="form-row mb-3">
+    <label class="form-label" for="address">地址</label>
+    <input class="form-control" type="text" name="address" id="address" placeholder="請輸入店家地址"
+      value="{{restaurant.address}}">
+  </div>
+  <div class="form-row mb-3">
+    <label class="form-label" for="description">請設定餐點</label>
+    <textarea class="form-control" id="description" name="description" rows="16" placeholder="請設定餐點">{{#each restaurant.Meals}}{{this.meals}},{{this.price}}
+      {{/each}}
+      </textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">送出</button>
+  <a class="btn btn-outline-secondary" href="javascript:history.back()">Back</a>
+</form>
