@@ -3,6 +3,7 @@ const router = express.Router()
 
 const admin = require('./modules/admin')
 const { authenticated } = require('../middlewares/auth')
+const { authenticatedAdmin } = require('../middlewares/auth')
 
 const passport = require('../config/passport')
 
@@ -14,9 +15,8 @@ const { generalErrorHandler } = require('../middlewares/error-handler')
 router.use('/admin', admin)
 
 
-router.get('/test', userController.getTest)
-router.get('/signup', userController.signUpPage)
-router.post('/signup', userController.createUser)
+router.get('/signup', authenticatedAdmin, userController.signUpPage)
+router.post('/signup', authenticatedAdmin, userController.createUser)
 
 router.get('/signin', userController.signInPage)
 router.post('/signin', passport.authenticate('local', { failureRedirect: '/signin', failureFlash: true }), userController.signIn)
@@ -24,6 +24,9 @@ router.post('/signin', passport.authenticate('local', { failureRedirect: '/signi
 router.get('/logout', userController.logout)
 
 router.get('/user/orders', authenticated, userController.getOrders)
+router.get('/user/order/:id', authenticated, userController.getOrder)
+router.get('/user/order/:id/edit', authenticated, userController.editOrder)
+router.put('/user/order/:id', authenticated, userController.putOrder)
 
 router.get('/ordering', authenticated, orderController.createOrder)
 router.post('/ordering', authenticated, orderController.postOrder)

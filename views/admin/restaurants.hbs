@@ -1,26 +1,23 @@
 <br>
-<a href='/signup'>
-  <button type="button" class="btn btn-primary">新增使用者</button>
-</a>
-<a href='/admin/restaurants'>
-  <button type="button" class="btn btn-primary">新增餐廳</button>
+<a href='/admin/restaurants/create'>
+  <button type="button" class="btn btn-primary">New Restaurant</button>
 </a>
 <br />
 <br />
 <table class="table align-middle">
   <thead class="thead-dark">
     <tr>
-      <th scope="col">訂單日期</th>
+      <th scope="col">Name</th>
       <th scope="col"></th>
     </tr>
   </thead>
   <tbody>
+    {{#each restaurants}}
     <tr>
-      {{#each allorders}}
-      <th scope="row">{{this.unique_date}}</th>
+      <td>{{this.name}}</td>
       <td>
         <button type="button" class="btn btn-link">
-          <a class="btn btn-link link-primary" href="/admin/dailyorder/{{this.unique_date}}">
+          <a class="btn btn-link link-primary" href="/admin/restaurants/{{this.id}}">
             Show
           </a>
         </button>
@@ -38,4 +35,3 @@
     {{/each}}
   </tbody>
 </table>
-<a class="btn btn-outline-secondary" href="javascript:history.back()">Back</a>

@@ -1,1 +1,60 @@
-<h1>某一筆訂單</h1>
+{{!-- <table class="table align-middle">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col" style="width: 20%">訂單日期</th>
+      <th scope="col" style="width: 50%">訂單內容</th>
+      <th scope=" col">#</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      {{#each order}}
+      <td>{{this.name}}</td>
+      <td>{{this.description}}</td>
+      <td>
+        <button type="button" class="btn btn-link">
+          <a class="btn btn-link link-primary" href="/admin/restaurants/{{this.id}}">
+            Show
+          </a>
+        </button>
+        <button type="button" class="btn btn-link">
+          <a class="btn btn-link link-primary" href="/admin/restaurants/{{this.id}}/edit">
+            Edit
+          </a>
+        </button>
+        <form action="/admin/restaurants/{{this.id}}?_method=DELETE" method="POST" style="display: inline;">
+          <button type="submit" class="btn btn-link link-danger"
+            onclick="return confirm(`確定要刪除 {{ this.name }} 嗎？`)">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+<a class="btn btn-outline-secondary" href="javascript:history.back()">Back</a> --}}
+
+
+<div class="row mb-5">
+  <div class="col-md-12">
+    <h1>{{order.name}}</h1>
+    <p>[{{order.employeeId}}]</p>
+  </div>
+  {{!-- <div class="col-md-4">
+    <ul class="list-unstyled">
+      <li><strong>Opening Hour:</strong> {{order.}}</li>
+      <li><strong>Tel:</strong> {{restaurant.tel}}</li>
+      <li><strong>Address:</strong> {{restaurant.address}}</li>
+    </ul>
+  </div> --}}
+</div>
+<div class="col-md-8">
+  <p style="white-space: break-spaces;">{{order.description}}</p>
+</div>
+<hr>
+</div>
+<a class="btn btn-outline-secondary" href="/user/orders">Back</a>
+{{!-- <button type="button" class="btn btn-primary"> --}}
+  <a class="btn btn-primary btn-block" href="/user/order/{{order.id}}/edit">
+    編輯訂單
+  </a>
+  {{!-- </button> --}}

@@ -4,6 +4,7 @@ const session = require('express-session')
 const passport = require('./config/passport')
 const { getUser } = require('./helpers/auth-helpers')
 const flash = require('connect-flash')
+const methodOverride = require('method-override')
 const { engine } = require('express-handlebars')
 const app = express()
 const port = 3000
@@ -20,6 +21,7 @@ app.use(session({ secret: SESSION_SECRET, resave: false, saveUninitialized: fals
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(flash())
+app.use(methodOverride('_method'))
 
 
 app.use((req, res, next) => {

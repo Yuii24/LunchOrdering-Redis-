@@ -57,7 +57,8 @@ const userController = {
       .catch(err => next(err))
   },
   getOrders: (req, res, next) => {
-    sequelize.query('SELECT * FROM orders', { type: sequelize.QueryTypes.SELECT })
+    const userId = req.user.id
+    sequelize.query("SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC", { replacements: [userId], type: sequelize.QueryTypes.SELECT })
       .then((orders) => {
         orders = orders.map(order => {
           const date = new Date(order.created_at)
@@ -65,8 +66,10 @@ const userController = {
           const month = date.getMonth() + 1
           const day = date.getDate()
           const formattedDate = `${year}年${month}月${day}日`
+
           return {
             ...order,
+            description: order.description.substring(0, 50),
             formattedDate
           }
         })
@@ -95,12 +98,45 @@ const userController = {
     //   })
     //   .catch(err => next(err))
   },
-  getTest: (req, res, next) => {
-    sequelize.query("SELECT DATE_FORMAT(created_at, '%Y-%m-%d') AS unique_date FROM orders GROUP BY unique_date", { type: sequelize.QueryTypes.SELECT })
-      .then((test) => {
-        console.log(test)
+  getOrder: (req, res, next) => {
+    const orderId = req.params.id
+    Order.findByPk(orderId, { raw: true })
+      .then(order => {
+        if (!order) throw new Error("此訂單不存在")
+
+        res.render('user/order', { order })
       })
       .catch(err => next(err))
+  },
+  editOrder: (req, res, next) => {
+    const orderId = req.params.id
+    Order.findByPk(orderId, { raw: true })
+      .then(order => {
+        if (!order) throw new Error("此訂單不存在")
+
+        res.render('user/edit-order', { order })
+      })
+      .catch(err => next(err))
+  },
+  putOrder: (req, res, next) => {
+    const orderId = req.params.id
+    const { name, employeeId, description } = req.body
+    console.log('訂餐內容', description)
+    // Order.findByPk(orderId)
+    //   .then(order => {
+    //     if (!order) throw new Error("此訂單不存在")
+
+    //     return order.update({
+    //       name,
+    //       employeeId,
+    //       description
+    //     })
+    //   })
+    //   .then(() => {
+    //     req.flash('success_messages', '訂單更新成功')
+    //     res.redirect(`/user/order/${orderId}`)
+    //   })
+    //   .catch(err => next(err))
   }
 }
 
