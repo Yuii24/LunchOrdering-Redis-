@@ -59,40 +59,56 @@ const adminController = {
       return { productName, price: parseFloat(price) }
     })
 
-    console.log('訂餐內容', descriptionArray);
-
     try {
-      // 开启事务
-      const transaction = await sequelize.transaction();
-
-      // 新增餐廳資料
       const restaurant = await Restaurant.create(
         {
           name,
           tel,
           address,
-        },
-        { transaction }
-      );
-      // 新增餐點資料
+        }
+      )
       const menuItemsData = descriptionArray.map(item => ({
         meals: item.productName,
         price: item.price,
         restaurantId: restaurant.id // 关联的restaurantId
       }));
 
-      await Meal.bulkCreate(menuItemsData, { transaction });
+      await Meal.bulkCreate(menuItemsData);
 
-      // 提交事务
-      await transaction.commit();
 
       res.redirect('/admin/restaurants')
       // res.status(201).json({ message: 'Restaurant and menu items created successfully', restaurant });
     } catch (err) {
-      // 出现错误时回滚事务
-      if (transaction) await transaction.rollback();
       next(err);
     }
+
+    // try {
+    //   const transaction = await sequelize.transaction()
+
+    //   const restaurant = await Restaurant.create(
+    //     {
+    //       name,
+    //       tel,
+    //       address,
+    //     },
+    //     { transaction }
+    //   )
+    //   const menuItemsData = descriptionArray.map(item => ({
+    //     meals: item.productName,
+    //     price: item.price,
+    //     restaurantId: restaurant.id // 关联的restaurantId
+    //   }));
+
+    //   await Meal.bulkCreate(menuItemsData, { transaction });
+
+    //   await transaction.commit();
+
+    //   res.redirect('/admin/restaurants')
+    //   // res.status(201).json({ message: 'Restaurant and menu items created successfully', restaurant });
+    // } catch (err) {
+    //   if (transaction) await transaction.rollback();
+    //   next(err);
+    // }
   },
   getRestaurant: (req, res, next) => {
     Restaurant.findByPk(req.params.id, {
@@ -121,29 +137,22 @@ const adminController = {
     if (!tel) throw new Error("請輸入餐廳電話")
 
     const descriptionArray = description.split('\n').map(d => {
-      const [productName, price] = d.split(',').map(item => item.trim());
-      return { productName, price: parseFloat(price) };
-    }).filter(item => item.productName && !isNaN(item.price));
+      const [productName, price] = d.split(',').map(item => item.trim())
+      return { productName, price: parseFloat(price) }
+    }).filter(item => item.productName && !isNaN(item.price))
 
-    let transaction
+
     try {
-      // 开启事务
-      const transaction = await sequelize.transaction();
-
-      // 查找现有餐厅资料
       const restaurant = await Restaurant.findByPk(restId, {
-        include: [Meal],
-        transaction
+        include: [Meal]
       });
 
       if (!restaurant) {
-        throw new Error('Restaurant not found');
+        throw new Error('Restaurant not found')
       }
 
-      // 更新餐厅资料
-      await restaurant.update({ name, tel, address }, { transaction });
+      await restaurant.update({ name, tel, address })
 
-      // 遍历并更新或创建餐点数据
       for (const item of descriptionArray) {
         const [meal, created] = await Meal.findOrCreate({
           where: {
@@ -151,34 +160,127 @@ const adminController = {
             meals: item.productName
           },
           defaults: { price: item.price },
-          transaction
-        });
+        })
 
         if (!created) {
-          // 如果餐点已经存在，更新价格
-          await meal.update({ price: item.price }, { transaction });
+          // 如果餐點已经存在，更新價格
+          await meal.update({ price: item.price });
         }
       }
 
-      // 如果需要，可以删除不再包含在descriptionArray中的餐点
       const currentMeals = descriptionArray.map(item => item.productName);
       await Meal.destroy({
         where: {
           restaurantId: restaurant.id,
           meals: { [Op.notIn]: currentMeals }
-        },
-        transaction
+        }
       });
-
-      // 提交事务
-      await transaction.commit();
 
       res.redirect(`/admin/restaurants/${restId}`);
     } catch (err) {
-      // 出现错误时回滚事务
-      if (transaction) await transaction.rollback();
       next(err);
     }
+
+    // let transaction
+    // try {
+    //   // 开启事务
+    //   const transaction = await sequelize.transaction();
+
+    //   // 查找现有餐厅资料
+    //   const restaurant = await Restaurant.findByPk(restId, {
+    //     include: [Meal],
+    //     transaction
+    //   });
+
+    //   if (!restaurant) {
+    //     throw new Error('Restaurant not found');
+    //   }
+
+    //   // 更新餐厅资料
+    //   await restaurant.update({ name, tel, address }, { transaction });
+
+    //   // 遍历并更新或创建餐点数据
+    //   for (const item of descriptionArray) {
+    //     const [meal, created] = await Meal.findOrCreate({
+    //       where: {
+    //         restaurantId: restaurant.id,
+    //         meals: item.productName
+    //       },
+    //       defaults: { price: item.price },
+    //       transaction
+    //     });
+
+    //     if (!created) {
+    //       // 如果餐点已经存在，更新价格
+    //       await meal.update({ price: item.price }, { transaction });
+    //     }
+    //   }
+
+    //   // 如果需要，可以删除不再包含在descriptionArray中的餐点
+    //   const currentMeals = descriptionArray.map(item => item.productName);
+    //   await Meal.destroy({
+    //     where: {
+    //       restaurantId: restaurant.id,
+    //       meals: { [Op.notIn]: currentMeals }
+    //     },
+    //     transaction
+    //   });
+
+    //   // 提交事务
+    //   await transaction.commit();
+
+    //   res.redirect(`/admin/restaurants/${restId}`);
+    // } catch (err) {
+    //   // 出现错误时回滚事务
+    //   if (transaction) await transaction.rollback();
+    //   next(err);
+    // }
+  },
+  deleteMeal: (req, res, next) => {
+    const mealId = req.params.id
+    let restId
+
+    Meal.findByPk(mealId, {
+      include: [Restaurant]
+    })
+      .then(meal => {
+        if (!meal) throw new Error("餐點並不存在!")
+
+        restId = meal.Restaurant.id
+        return meal.destroy().then(() => restId)
+      })
+      .then(() => {
+        req.flash("success_messages", "刪除成功!")
+        return res.redirect(`/admin/restaurants/${restId}`)
+      })
+      .catch(err => next(err))
+  },
+  openOrder: (req, res, next) => {
+    let restId = req.params.id
+    restId = Number(restId)
+
+    console.log('restId', restId)
+
+    Restaurant.findByPk(restId)
+      .then((restaurant) => {
+        if (!restaurant) throw new Error("此餐廳不存在!")
+        console.log("restaurant", restaurant)
+
+        return Order.create({
+          name: req.user.name,
+          employeeId: req.user.employeeId,
+          restaurantId: restId,
+          isOpen: true
+        })
+      })
+      .then(() => {
+        req.flash("success_messages", "已經開放訂單!")
+        return res.redirect(`/admin/restaurants/${restId}`)
+      })
+      .catch(err => next(err))
+  },
+  closeOrder: (req, res, next) => {
+
   }
 }
 

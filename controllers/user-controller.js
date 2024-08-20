@@ -1,4 +1,4 @@
-const { Order, User } = require('../models')
+const { Order, User, Restaurant, Meal, } = require('../models')
 const { sequelize } = require('../models')
 const { Op } = require('sequelize');
 const bcrypt = require('bcrypt')
@@ -9,7 +9,7 @@ const userController = {
   },
   signIn: (req, res, next) => {
     req.flash('success_messages', '登入成功!')
-    res.redirect('/ordering')
+    res.redirect('/')
   },
   logout: (req, res, next) => {
     req.flash('success_messages', '登出成功!')
@@ -57,25 +57,28 @@ const userController = {
       .catch(err => next(err))
   },
   getOrders: (req, res, next) => {
-    const userId = req.user.id
-    sequelize.query("SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC", { replacements: [userId], type: sequelize.QueryTypes.SELECT })
-      .then((orders) => {
-        orders = orders.map(order => {
-          const date = new Date(order.created_at)
-          const year = date.getFullYear() - 1911
-          const month = date.getMonth() + 1
-          const day = date.getDate()
-          const formattedDate = `${year}年${month}月${day}日`
+    // const userId = req.user.id
+    // sequelize.query("SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC", { replacements: [userId], type: sequelize.QueryTypes.SELECT })
+    //   .then((orders) => {
+    //     orders = orders.map(order => {
+    //       const date = new Date(order.created_at)
+    //       const year = date.getFullYear() - 1911
+    //       const month = date.getMonth() + 1
+    //       const day = date.getDate()
+    //       const formattedDate = `${year}年${month}月${day}日`
 
-          return {
-            ...order,
-            description: order.description.substring(0, 50),
-            formattedDate
-          }
-        })
-        return res.render('user/orders', { orders })
-      })
-      .catch(err => next(err))
+    //       return {
+    //         ...order,
+    //         description: order.description.substring(0, 50),
+    //         formattedDate
+    //       }
+    //     })
+    //     return res.render('user/orders', { orders })
+    //   })
+    //   .catch(err => next(err))
+
+
+
     // return Order.findAll({
     //   raw: true,
     //   nest: true
@@ -99,6 +102,7 @@ const userController = {
     //   .catch(err => next(err))
   },
   getOrder: (req, res, next) => {
+  /*
     const orderId = req.params.id
     Order.findByPk(orderId, { raw: true })
       .then(order => {
@@ -106,9 +110,10 @@ const userController = {
 
         res.render('user/order', { order })
       })
-      .catch(err => next(err))
+      .catch(err => next(err))*/
   },
   editOrder: (req, res, next) => {
+    /*
     const orderId = req.params.id
     Order.findByPk(orderId, { raw: true })
       .then(order => {
@@ -117,8 +122,9 @@ const userController = {
         res.render('user/edit-order', { order })
       })
       .catch(err => next(err))
-  },
+*/  },
   putOrder: (req, res, next) => {
+    /*
     const orderId = req.params.id
     const { name, employeeId, description } = req.body
     console.log('訂餐內容', description)
@@ -137,7 +143,17 @@ const userController = {
     //     res.redirect(`/user/order/${orderId}`)
     //   })
     //   .catch(err => next(err))
-  }
+*/  },
+getOrderingRest: (req, res, next) => {
+  
+  //   Restaurant.findAll({
+  //     raw: true,
+  //     nest: true
+  //   })
+  //     .then(restaurants => {
+  //       return res.render('orderingrest', { restaurants })
+  //     })
+ },
 }
 
 module.exports = userController

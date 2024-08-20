@@ -23,6 +23,10 @@ router.post('/signin', passport.authenticate('local', { failureRedirect: '/signi
 
 router.get('/logout', userController.logout)
 
+router.get('/orderingrest', authenticated, orderController.getOrderingRest)
+router.get('/orderpage/:id', authenticated, orderController.getOrderPage)
+router.post('/orderpage/:id', authenticated, orderController.postOrdering)
+
 router.get('/user/orders', authenticated, userController.getOrders)
 router.get('/user/order/:id', authenticated, userController.getOrder)
 router.get('/user/order/:id/edit', authenticated, userController.editOrder)
@@ -32,7 +36,7 @@ router.get('/ordering', authenticated, orderController.createOrder)
 router.post('/ordering', authenticated, orderController.postOrder)
 
 router.get('/', (req, res) => {
-  res.redirect('/ordering')
+  res.redirect('/orderingrest')
 })
 
 router.use('/', generalErrorHandler)

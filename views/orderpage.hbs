@@ -1,0 +1,123 @@
+<form action="/orderpage/{{order.id}}" method="POST">
+  <div class="mb-4 text-center">
+    <h1 class="h3 font-weight-normal mb-3">請開始點餐</h1>
+  </div>
+  <div>
+    <h1>{{restaurant.name}}</h1>
+    <p>{{restaurant.tel}}</p>
+    <p>{{restaurant.address}}</p>
+  </div>
+  {{!-- <div class="form-row mb-3">
+    <div class="col-md-6">
+      <label class="form-label" for="name">姓名</label>
+      <input class="form-control" type="text" name="name" id="name" placeholder="請輸入你的名字" value="{{user.name}}"
+        required>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label" for="employeeId">員工編號</label>
+      <input class="form-control" type="text" name="employeeId" id="employeeId" placeholder="請輸入員工編號"
+        value="{{user.employeeId}}" required>
+    </div>
+  </div> --}}
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label class="form-label" for="name">姓名</label>
+      <input class="form-control" type="text" name="name" id="name" placeholder="請輸入你的名字" value="{{user.name}}"
+        required>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label" for="employeeId">員工編號</label>
+      <input class="form-control" type="text" name="employeeId" id="employeeId" placeholder="請輸入員工編號"
+        value="{{user.employeeId}}" required>
+    </div>
+  </div>
+
+
+  <table class="table align-middle">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col" style="width: 20%">產品</th>
+        <th scope="col" style="width: 20%">價格</th>
+        <th scope="col" style="width: 30%">數量</th>
+        <th scope="col">說明</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each meals}}
+      <tr>
+        <td>{{this.meals}}</td>
+        <td>{{this.price}}</td>
+        <td>
+          <input class="form-control" type="number" name="quantity_{{this.id}}" placeholder="請輸入數量">
+          </div>
+        </td>
+        <td>
+          <input class="form-control" type="text" name="employeeId" id="description_{{this.id}}" placeholder="請輸入說明">
+          </div>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  <button type="submit" class="btn btn-primary">送出</button>
+  <a class="btn btn-outline-secondary" href="javascript:history.back()">Back</a>
+</form>
+
+{{!-- <form data-v-7efa0e21="" novalidate="novalidate" class="order-form">
+  <div data-v-747d194f="" data-v-7efa0e21="">
+    <table data-v-747d194f="" class="tiles choose-product-table">
+      <thead data-v-747d194f="">
+        <tr data-v-747d194f="">
+          <th data-v-747d194f="" class="product-name-cell">產品</th>
+          <th data-v-747d194f="">價格</th>
+          <th data-v-747d194f="" colspan="2">數量</th>
+          <th data-v-747d194f="">說明一下</th>
+        </tr>
+      </thead>
+      <tbody data-v-747d194f=""><!----><!---->
+        <tr data-v-747d194f="" class="even">
+          <td data-v-747d194f="" class="product-name-cell"> 魯肉飯 <a data-v-747d194f="" href="#"
+              class="d-inline-block mt-1"><!----></a></td>
+          <td data-v-747d194f="" class="variation-cell validation-hint-cell">
+            <div data-v-747d194f="" class="text-center"><span data-v-747d194f="" class="item-price">40</span></div>
+          </td>
+          <td data-v-747d194f="" class="qty-cell"><input data-v-747d194f="" type="number" min="0" max="99"
+              class="form-control item-qty no-spin" wfd-id="id0"></td>
+          <td data-v-747d194f="" class="sign-cell text-nowrap"><button data-v-747d194f="" type="button"
+              class="btn btn-outline-primary btn-sign">＋ </button><button data-v-747d194f="" type="button"
+              class="btn btn-outline-primary btn-sign ml-2">－ </button></td>
+          <td data-v-747d194f="" class="comment-cell"><input data-v-747d194f="" type="text"
+              name="category:0:product:0.comment" maxlength="40" class="form-control item-comment" wfd-id="id1"></td>
+        </tr>
+        <tr data-v-747d194f="" class="odd">
+          <td data-v-747d194f="" class="product-name-cell"> 叉燒飯 <a data-v-747d194f="" href="#"
+              class="d-inline-block mt-1"><!----></a></td>
+          <td data-v-747d194f="" class="variation-cell validation-hint-cell">
+            <div data-v-747d194f="" class="text-center"><span data-v-747d194f="" class="item-price">60</span></div>
+          </td>
+          <td data-v-747d194f="" class="qty-cell"><input data-v-747d194f="" type="number" min="0" max="99"
+              class="form-control item-qty no-spin" wfd-id="id2"></td>
+          <td data-v-747d194f="" class="sign-cell text-nowrap"><button data-v-747d194f="" type="button"
+              class="btn btn-outline-primary btn-sign">＋ </button><button data-v-747d194f="" type="button"
+              class="btn btn-outline-primary btn-sign ml-2">－ </button></td>
+          <td data-v-747d194f="" class="comment-cell"><input data-v-747d194f="" type="text"
+              name="category:0:product:1.comment" maxlength="40" class="form-control item-comment" wfd-id="id3"></td>
+        </tr><!---->
+      </tbody>
+    </table><!---->
+  </div>
+  <div data-v-49841dd0="" data-v-7efa0e21="" class="mt-4 mr-1">
+    <div data-v-49841dd0="" class="form-group"><label data-v-49841dd0="" for="buyer-played-name"><span
+          data-v-49841dd0="" class="color-red-500">* </span>訂購人: </label><input data-v-49841dd0=""
+        id="buyer-played-name" type="text" maxlength="20" required="required" class="form-control" wfd-id="id4"></div>
+    <!---->
+  </div>
+  <div data-v-7efa0e21="" class="form-group"><label data-v-7efa0e21=""></label>
+    <div data-v-7efa0e21="" class="form-control-plaintext"><button data-v-505d9273="" data-v-7efa0e21="" type="submit"
+        class="btn btn-primary"><span data-v-505d9273="" class="spacing"></span><span data-v-7efa0e21=""
+          data-v-505d9273=""> 訂下去 ( 0 份 ) </span><span data-v-505d9273=""
+          class="spacing text-center"><!----></span></button><button data-v-7efa0e21="" type="button"
+        class="ml-3 btn btn-default"> 全部清除 </button><button data-v-7efa0e21="" type="button"
+        class="ml-3 btn btn-default"> 回上頁 </button></div>
+  </div>
+</form> --}}
