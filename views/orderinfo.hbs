@@ -1,0 +1,44 @@
+<br>
+<h2>
+  {{personalorder.restaurantName}}
+</h2>
+<br>
+<h5>
+  訂購日: {{personalorder.formattedDate}}
+</h5>
+<h5>
+  訂購人: {{personalorder.name}}
+</h5>
+<h5>
+  員工編號: {{personalorder.employeeId}}
+</h5>
+<br />
+<table class="table align-middle">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col" style="width: 12%">餐點</th>
+      <th scope="col" style="width: 10%">數量</th>
+      <th scope="col" style="width: 40%">金額</th>
+      <th scope="col">訂餐者</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      {{#each mealsitem}}
+      <th scope="row">{{this.meals}}</th>
+      <td>{{this.total_sold}}</td>
+      <td>{{this.quantity}}</td>
+      <td>
+        {{#each ../mealsitem2}}
+        {{#ifCond this.meals ../this.meals}}
+        {{#forLoop this.total_sold}}
+        <button type="button" class="btn btn-secondary" disabled>{{../this.name}}</button>
+        {{/forLoop}}
+        {{/ifCond}}
+        {{/each}}
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+<a class="btn btn-outline-secondary" href="/orderingrest">Back</a>

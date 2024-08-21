@@ -27,7 +27,7 @@
     </div>
     <div class="col-md-6">
       <label class="form-label" for="employeeId">員工編號</label>
-      <input class="form-control" type="text" name="employeeId" id="employeeId" placeholder="請輸入員工編號"
+      <input class="form-control" type="number" name="employeeId" id="employeeId" placeholder="請輸入員工編號"
         value="{{user.employeeId}}" required>
     </div>
   </div>
@@ -52,7 +52,8 @@
           </div>
         </td>
         <td>
-          <input class="form-control" type="text" name="employeeId" id="description_{{this.id}}" placeholder="請輸入說明">
+          <input class="form-control" type="text" name="description_{{this.id}}" id="description_{{this.id}}"
+            placeholder="請輸入說明">
           </div>
         </td>
       </tr>

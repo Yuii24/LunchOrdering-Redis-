@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Mealorder.belongsTo(models.Personalorder, { foreignKey: 'personalorderId', onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+      Mealorder.belongsTo(models.Order, { foreignKey: 'orderId' })
     }
   }
   Mealorder.init({
@@ -19,7 +20,9 @@ module.exports = (sequelize, DataTypes) => {
     quantity: DataTypes.INTEGER,
     mealtotal: DataTypes.INTEGER,
     personalorderId: DataTypes.INTEGER,
-    description: DataTypes.TEXT
+    description: DataTypes.TEXT,
+    name: DataTypes.STRING,
+    employeeId: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'Mealorder',

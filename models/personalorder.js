@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Personalorder.belongsTo(models.Order, { foreignKey: 'orderId' })
       Personalorder.belongsTo(models.User, { foreignKey: 'UserId' })
+      Personalorder.hasMany(models.Mealorder, { foreignKey: 'personalorderId' })
     }
   }
   Personalorder.init({
@@ -19,7 +20,8 @@ module.exports = (sequelize, DataTypes) => {
     employeeId: DataTypes.INTEGER,
     totalprice: DataTypes.INTEGER,
     orderId: DataTypes.INTEGER,
-    userId: DataTypes.INTEGER
+    userId: DataTypes.INTEGER,
+    restaurantName: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Personalorder',

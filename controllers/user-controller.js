@@ -1,4 +1,4 @@
-const { Order, User, Restaurant, Meal, } = require('../models')
+const { Order, User, Restaurant, Meal, Personalorder, Mealorder } = require('../models')
 const { sequelize } = require('../models')
 const { Op } = require('sequelize');
 const bcrypt = require('bcrypt')
@@ -57,7 +57,40 @@ const userController = {
       .catch(err => next(err))
   },
   getOrders: (req, res, next) => {
-    // const userId = req.user.id
+    const userId = req.user.id
+
+    Personalorder.findAll({
+      where: {
+        userId: userId
+      },
+      order: [
+        ['createdAt', 'DESC']
+      ],
+      timezone: '+08:00',
+      raw: true,
+      nest: true
+    })
+      .then((porders) => {
+        if (!porders) throw new Error("訂單不存在")
+
+        porders = porders.map(porder => {
+          const date = new Date(porder.createdAt)
+          const year = date.getFullYear() - 1911
+          const month = date.getMonth() + 1
+          const day = date.getDate()
+          const formattedDate = `${year}年${month}月${day}日`
+
+          console.log('date', date)
+
+          return {
+            ...porder,
+            formattedDate
+          }
+        })
+        console.log('orders', porders)
+        return res.render('user/orders', { porders })
+      })
+      .catch(err => next(err))
     // sequelize.query("SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC", { replacements: [userId], type: sequelize.QueryTypes.SELECT })
     //   .then((orders) => {
     //     orders = orders.map(order => {
@@ -101,17 +134,49 @@ const userController = {
     //   })
     //   .catch(err => next(err))
   },
-  getOrder: (req, res, next) => {
+  getOrder: async (req, res, next) => {
+    const poId = req.params.id
+
+    try {
+      let personalorder = await Personalorder.findByPk(poId, {
+        raw: true,
+        nest: true,
+      })
+
+      const date = new Date(personalorder.createdAt)
+      const year = date.getFullYear() - 1911
+      const month = date.getMonth() + 1
+      const day = date.getDate()
+      const formattedDate = `${year}年${month}月${day}日`
+
+      personalorder = { ...personalorder, formattedDate }
+
+
+      const mealorder = await Mealorder.findAll({
+        where: {
+          personalorderId: poId
+        },
+        raw: true,
+        nest: true
+      })
+
+      if (!mealorder) throw new Error("此訂單不存在")
+
+      res.render('user/order', { mealorder, personalorder })
+    }
+    catch (err) {
+      next(err)
+    }
+  },
   /*
     const orderId = req.params.id
     Order.findByPk(orderId, { raw: true })
       .then(order => {
         if (!order) throw new Error("此訂單不存在")
-
+ 
         res.render('user/order', { order })
       })
       .catch(err => next(err))*/
-  },
   editOrder: (req, res, next) => {
     /*
     const orderId = req.params.id
@@ -144,16 +209,16 @@ const userController = {
     //   })
     //   .catch(err => next(err))
 */  },
-getOrderingRest: (req, res, next) => {
-  
-  //   Restaurant.findAll({
-  //     raw: true,
-  //     nest: true
-  //   })
-  //     .then(restaurants => {
-  //       return res.render('orderingrest', { restaurants })
-  //     })
- },
+  getOrderingRest: (req, res, next) => {
+
+    //   Restaurant.findAll({
+    //     raw: true,
+    //     nest: true
+    //   })
+    //     .then(restaurants => {
+    //       return res.render('orderingrest', { restaurants })
+    //     })
+  },
 }
 
 module.exports = userController

@@ -8,19 +8,19 @@
   <thead class="thead-dark">
     <tr>
       <th scope="col" style="width: 12%">訂單日期</th>
-      <th scope="col" style="width: 10%">Name</th>
-      <th scope="col" style="width: 10%">Category</th>
-      <th scope="col" style="width: 40%">訂單內容</th>
+      <th scope="col" style="width: 10%">訂購人</th>
+      <th scope="col" style="width: 10%">餐廳名稱</th>
+      <th scope="col" style="width: 40%">總金額</th>
       <th scope="col"></th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      {{#each orders}}
+      {{#each porders}}
       <th scope="row">{{this.formattedDate}}</th>
       <td>{{this.name}}</td>
-      <td>{{this.employee_id}}</td>
-      <td>{{this.description}}</td>
+      <td>{{this.restaurantName}}</td>
+      <td>{{this.totalprice}}</td>
       <td>
         <button type="button" class="btn btn-link">
           <a class="btn btn-link link-primary" href="/user/order/{{this.id}}">

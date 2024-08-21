@@ -50,7 +50,6 @@ const orderController = {
       include: [Restaurant]
     })
       .then(orders => {
-        console.log('order', orders)
         const orderDate = orders.map(orders => orders.toJSON())
         return res.render('orderingrest', { orders: orderDate })
       })
@@ -74,13 +73,13 @@ const orderController = {
 
         const mealsData = meals.map(meals => meals.toJSON())
 
-        console.log('meals', mealsData)
-
         return res.render('orderpage', { order: order.toJSON(), restaurant: restaurant.toJSON(), meals: mealsData })
       })
       .catch(err => next(err))
   },
   postOrdering: async (req, res, next) => {
+    let { name, employeeId } = req.body
+
     try {
       const orderId = req.params.id;
 
@@ -121,7 +120,8 @@ const orderController = {
         employeeId: req.user.employeeId,
         totalprice: totalPrice,
         orderId: orderId,
-        userId: req.user.id
+        userId: req.user.id,
+        restaurantName: restaurant.name
       })
 
       const mealorderData = orderItems.map(item => ({
@@ -130,7 +130,10 @@ const orderController = {
         quantity: item.quantity,
         description: item.description,
         mealtotal: item.mealtotal,
-        personalorderId: personalorder.id
+        personalorderId: personalorder.id,
+        orderId: orderId,
+        name: name,
+        employeeId: employeeId
       }));
 
       await Mealorder.bulkCreate(mealorderData)
@@ -197,7 +200,51 @@ const orderController = {
       })
       .catch(err => next(err))
       */
+  },
+  getOrderInfo: async (req, res, next) => {
+    const orderId = req.params.id
+
+    try {
+      const mealsitem = await Mealorder.findAll({
+        where: {
+          orderId
+        },
+        attributes: [
+          'meals',
+          [sequelize.fn('SUM', sequelize.col('quantity')), 'total_sold']
+        ],
+        group: ['meals'],
+        raw: true,
+        nest: true
+      })
+      // console.log('personalorder', personalorder)
+      console.log('mealsitem', mealsitem)
+
+      const mealsitem2 = await Mealorder.findAll({
+        where: {
+
+          orderId
+        },
+        attributes: [
+          'name',
+          'meals',
+          [sequelize.fn('SUM', sequelize.col('quantity')), 'total_sold']
+          // [sequelize.fn('COUNT', sequelize.col('quantity')), 'quantity_ordered']
+        ],
+        group: ['name', 'meals'],
+        raw: true,
+        nest: true
+      })
+      // console.log('personalorder', personalorder)
+      console.log('mealsitem2', mealsitem2)
+
+      res.render('orderinfo', { mealsitem, mealsitem2 })
+
+
+    }
+    catch (err) {
+      next(err)
+    }
   }
 }
-
 module.exports = orderController

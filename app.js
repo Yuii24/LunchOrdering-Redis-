@@ -5,13 +5,16 @@ const passport = require('./config/passport')
 const { getUser } = require('./helpers/auth-helpers')
 const flash = require('connect-flash')
 const methodOverride = require('method-override')
+const handlebarsHelpers = require('./helpers/handlebars-helpers')
 const { engine } = require('express-handlebars')
 const app = express()
 const port = 3000
 
 const SESSION_SECRET = 'secret'
 
-app.engine('.hbs', engine({ extname: '.hbs' }))
+app.engine('hbs', engine({ extname: '.hbs', helpers: handlebarsHelpers }))
+
+// app.engine('hbs', engine({ extname: '.hbs' }))
 app.set('view engine', '.hbs')
 app.set('views', './views')
 app.use(express.urlencoded({ extended: true }))
