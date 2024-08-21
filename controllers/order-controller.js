@@ -1,4 +1,4 @@
-const { Order, User, Restaurant, Meal, Personalorder } = require('../models')
+const { Order, User, Restaurant, Meal, Personalorder, Mealorder } = require('../models')
 const { sequelize } = require('../models')
 const { Op } = require('sequelize');
 const bcrypt = require('bcrypt')
@@ -80,7 +80,69 @@ const orderController = {
       })
       .catch(err => next(err))
   },
-  postOrdering: (req, res, next) => {
+  postOrdering: async (req, res, next) => {
+    try {
+      const orderId = req.params.id;
+
+      const order = await Order.findByPk(orderId)
+      if (!order) throw new Error("此餐廳不存在！")
+
+      const restId = order.restaurantId;
+
+      const restaurant = await Restaurant.findByPk(restId, {
+        include: [Meal]
+      });
+      if (!restaurant) throw new Error('Restaurant not found')
+
+      const orderItems = []
+      let totalPrice = 0
+
+      // 遍历餐点
+      restaurant.Meals.forEach(meal => {
+        const quantity = Number(req.body[`quantity_${meal.id}`])
+        const description = req.body[`description_${meal.id}`] || ''
+
+        if (quantity && quantity > 0) {
+          const mealtotal = meal.price * quantity
+          totalPrice += mealtotal
+
+          orderItems.push({
+            mealsname: meal.meals,
+            price: meal.price,
+            quantity,
+            description,
+            mealtotal
+          })
+        }
+      })
+
+      const personalorder = await Personalorder.create({
+        name: req.user.name,
+        employeeId: req.user.employeeId,
+        totalprice: totalPrice,
+        orderId: orderId,
+        userId: req.user.id
+      })
+
+      const mealorderData = orderItems.map(item => ({
+        meals: item.mealsname,
+        price: item.price,
+        quantity: item.quantity,
+        description: item.description,
+        mealtotal: item.mealtotal,
+        personalorderId: personalorder.id
+      }));
+
+      await Mealorder.bulkCreate(mealorderData)
+
+      req.flash('success_messages', '訂餐成功！')
+      res.redirect(`/orderpage/${orderId}`)
+
+    } catch (err) {
+      next(err);
+    }
+
+    /*
     const orderId = req.params.id
     console.log('orderId', orderId)
     let restId
@@ -106,14 +168,15 @@ const orderController = {
               const description = req.body[`description_${meal.id}`] || '';
 
               if (quantity && quantity > 0) {
-                const itemTotal = meal.price * quantity;
-                totalPrice += itemTotal;
+                const mealtotal = meal.price * quantity;
+                totalPrice += mealtotal;
 
                 orderItems.push({
-                  mealId: meal.id,
+                  mealsname: meal.meals,
+                  price: meal.price,
                   quantity,
                   description,
-                  itemTotal
+                  mealtotal
                 });
               }
             })
@@ -129,55 +192,11 @@ const orderController = {
               orderId: orderId,
               userId: req.user.id
             })
+
           })
       })
       .catch(err => next(err))
-    /*
-Restaurant.findByPk(restId, {
-  include: [Meal]
-})
-  .then(restaurant => {
-    if (!restaurant) throw new Error('Restaurant not found');
-
-    const orderItems = [];
-    let totalPrice = 0;
-
-    // 遍历餐点
-    restaurant.Meals.forEach(meal => {
-      const quantity = Number(req.body[`quantity_${meal.id}`]);
-      const description = req.body[`description_${meal.id}`] || '';
-
-      if (quantity && quantity > 0) {
-        const itemTotal = meal.price * quantity;
-        totalPrice += itemTotal;
-
-        orderItems.push({
-          mealId: meal.id,
-          quantity,
-          description,
-          itemTotal
-        });
-      }
-    });
-
-    console.log('restaurantId', restId)
-    console.log('totalPrice', totalPrice)
-    console.log('orderItems', orderItems)
- 
-        // 处理订单（假设你有一个 Order 模型）
-        return Order.create({
-          restaurantId,
-          totalPrice,
-          orderItems,  // 假设 Order 模型支持关联 orderItems
-          userId: req.user.id  // 假设你有用户登录系统
-        });
- 
-})
-  .then(() => {
-res.redirect('/user/orders');  // 假设这是你的订单列表页面
-})
-.catch(err => next(err))
-*/
+      */
   }
 }
 
