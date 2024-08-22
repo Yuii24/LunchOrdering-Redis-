@@ -37,7 +37,7 @@ router.get('/user/order/:id/edit', authenticated, userController.editOrder)
 router.patch('/user/order/:id', authenticated, userController.patchMeal)
 router.delete('/user/mealorder/:id', authenticated, userController.deleteMeal)
 
-router.get('/ordering', authenticated, orderController.createOrder)
+// router.get('/ordering', authenticated, orderController.createOrder)
 // router.post('/ordering', authenticated, orderController.postOrder)
 
 router.get('/', (req, res) => {

@@ -16,6 +16,10 @@ router.post('/restaurants/:id', authenticatedAdmin, adminController.openOrder)
 router.post('/restaurants', authenticatedAdmin, adminController.psotRestaurants)
 router.delete('/meals/:id', authenticatedAdmin, adminController.deleteMeal)
 
+router.patch('/order/:id', authenticatedAdmin, adminController.closeOrder)
+
+router.get('/closeorder', authenticatedAdmin, adminController.getCloseOrder)
+
 
 router.get('/allorders', authenticatedAdmin, adminController.getAllOrders)
 router.get('/dailyorder/:date', authenticatedAdmin, adminController.getDailyOrder)

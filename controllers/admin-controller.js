@@ -279,8 +279,38 @@ const adminController = {
       })
       .catch(err => next(err))
   },
-  closeOrder: (req, res, next) => {
+  closeOrder: async (req, res, next) => {
+    const orderId = req.params.id
 
+    try {
+      const order = await Order.findByPk(orderId)
+
+      console.log('close', order)
+      console.log('closeId', order.isOpen)
+
+      if (!order.isOpen) throw new Error('這個訂單並未開放!')
+
+      await order.update({
+        isOpen: false
+      })
+
+      req.flash('success_messages', '訂單已經關閉')
+      res.redirect('/orderingrest')
+    } catch (err) {
+      next(err)
+    }
+  },
+  getCloseOrder: (req, res, next) => {
+    Order.findAll({
+      where: {
+        isOpen: false
+      },
+      include: [Restaurant]
+    })
+      .then(orders => {
+        const orderDate = orders.map(orders => orders.toJSON())
+        return res.render('admin/backOrder', { orders: orderDate })
+      })
   }
 }
 

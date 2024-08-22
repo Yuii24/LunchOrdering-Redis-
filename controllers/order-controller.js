@@ -4,6 +4,7 @@ const { Op } = require('sequelize');
 const bcrypt = require('bcrypt')
 
 const orderController = {
+  /*
   createOrder: (req, res, next) => {
     res.render('ordering')
   },
@@ -41,7 +42,7 @@ const orderController = {
     //     res.redirect('/ordering')
     //   })
     //   .catch(err => next(err))
-  },
+  },*/
   getOrderingRest: (req, res, next) => {
     Order.findAll({
       where: {
@@ -274,13 +275,11 @@ const orderController = {
 
       console.log('Rest', Rest)
 
-      res.render('orderinfo', { mealsitem, mealsitemEachperson, mealsdescription, meals, Rest })
-
-
+      res.render('orderinfo', { mealsitem, mealsitemEachperson, mealsdescription, meals, Rest, orderId })
     }
     catch (err) {
       next(err)
     }
-  }
+  },
 }
 module.exports = orderController

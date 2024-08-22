@@ -13,6 +13,15 @@
   總金額: $ {{meals.total_price}}
 </h5>
 <br />
+{{#if user.isAdmin}}
+<div class="container">
+  <div class="d-flex justify-content-end mb-3 d-flex-gap">
+    <form action="/admin/order/{{orderId}}?_method=PATCH" method="POST" style="display: inline;">
+      <button type="submit" class="btn btn-secondary" onclick="return confirm(`確定要關閉訂餐嗎？`)">關閉訂餐</button>
+    </form>
+  </div>
+</div>
+{{/if}}
 <table class="table align-middle">
   <thead class="thead-dark">
     <tr>
