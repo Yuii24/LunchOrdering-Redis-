@@ -211,6 +211,7 @@ const orderController = {
         },
         attributes: [
           'meals',
+          'price',
           [sequelize.fn('SUM', sequelize.col('quantity')), 'total_sold']
         ],
         group: ['meals'],
@@ -220,9 +221,8 @@ const orderController = {
       // console.log('personalorder', personalorder)
       console.log('mealsitem', mealsitem)
 
-      const mealsitem2 = await Mealorder.findAll({
+      const mealsitemEachperson = await Mealorder.findAll({
         where: {
-
           orderId
         },
         attributes: [
@@ -235,10 +235,32 @@ const orderController = {
         raw: true,
         nest: true
       })
-      // console.log('personalorder', personalorder)
-      console.log('mealsitem2', mealsitem2)
 
-      res.render('orderinfo', { mealsitem, mealsitem2 })
+      const mealsdescription = await Mealorder.findAll({
+        where: {
+          orderId
+        },
+        attributes: [
+          'name',
+          'meals',
+          'description'
+        ],
+        group: ['meals', 'description'],
+        raw: true,
+        nest: true
+      })
+
+      const personalorder = await Personalorder.findOne({
+        where: {
+          orderId: orderId
+        },
+        raw: true,
+        nest: true
+      })
+
+      console.log('personalorder', personalorder)
+
+      res.render('orderinfo', { mealsitem, mealsitemEachperson, mealsdescription, personalorder })
 
 
     }

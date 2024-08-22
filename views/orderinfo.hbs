@@ -1,6 +1,8 @@
 <br>
 <h2>
   {{personalorder.restaurantName}}
+  {{#multiply 5 6}}
+  {{/multiply}}
 </h2>
 <br>
 <h5>
@@ -18,7 +20,8 @@
     <tr>
       <th scope="col" style="width: 12%">餐點</th>
       <th scope="col" style="width: 10%">數量</th>
-      <th scope="col" style="width: 40%">金額</th>
+      <th scope="col" style="width: 10%">單價</th>
+      <th scope="col" style="width: 10%">金額</th>
       <th scope="col">訂餐者</th>
     </tr>
   </thead>
@@ -27,13 +30,45 @@
       {{#each mealsitem}}
       <th scope="row">{{this.meals}}</th>
       <td>{{this.total_sold}}</td>
-      <td>{{this.quantity}}</td>
+      <td>{{this.price}}</td>
+      <td>{{#multiply this.total_sold this.price}}{{/multiply}}</td>
       <td>
-        {{#each ../mealsitem2}}
+        {{#each ../mealsitemEachperson}}
         {{#ifCond this.meals ../this.meals}}
         {{#forLoop this.total_sold}}
         <button type="button" class="btn btn-secondary" disabled>{{../this.name}}</button>
         {{/forLoop}}
+        {{/ifCond}}
+        {{/each}}
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+<br />
+<br />
+
+<h5>
+  額外說明：
+</h5>
+<br />
+<table class="table align-middle">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col" style="width: 20%">餐點</th>
+      <th scope="col" style="width: 80%">說明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      {{#each mealsitem}}
+      <th scope="row">{{this.meals}}</th>
+      <td>
+        {{#each ../mealsdescription}}
+        {{#ifCond this.meals ../this.meals}}
+        {{#if this.description}}
+        {{this.name}}: {{this.description}}<br>
+        {{/if}}
         {{/ifCond}}
         {{/each}}
       </td>

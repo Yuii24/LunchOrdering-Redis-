@@ -8,5 +8,8 @@ module.exports = {
       result += options.fn(i);
     }
     return result;
+  },
+  multiply: function (a, b) {
+    return a * b
   }
 }
