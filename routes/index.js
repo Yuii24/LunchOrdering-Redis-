@@ -30,9 +30,12 @@ router.get('/orderpage/:id', authenticated, orderController.getOrderPage)
 router.post('/orderpage/:id', authenticated, orderController.postOrdering)
 
 router.get('/user/orders', authenticated, userController.getOrders)
+router.delete('/user/order/:id', authenticated, userController.deleteOrder)
+
 router.get('/user/order/:id', authenticated, userController.getOrder)
 router.get('/user/order/:id/edit', authenticated, userController.editOrder)
-router.put('/user/order/:id', authenticated, userController.putOrder)
+router.patch('/user/order/:id', authenticated, userController.patchMeal)
+router.delete('/user/mealorder/:id', authenticated, userController.deleteMeal)
 
 router.get('/ordering', authenticated, orderController.createOrder)
 // router.post('/ordering', authenticated, orderController.postOrder)

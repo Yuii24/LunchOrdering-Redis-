@@ -10,7 +10,6 @@
       <th scope="col" style="width: 12%">訂單日期</th>
       <th scope="col" style="width: 10%">訂購人</th>
       <th scope="col" style="width: 10%">餐廳名稱</th>
-      <th scope="col" style="width: 40%">總金額</th>
       <th scope="col"></th>
     </tr>
   </thead>
@@ -20,19 +19,13 @@
       <th scope="row">{{this.formattedDate}}</th>
       <td>{{this.name}}</td>
       <td>{{this.restaurantName}}</td>
-      <td>{{this.totalprice}}</td>
       <td>
         <button type="button" class="btn btn-link">
           <a class="btn btn-link link-primary" href="/user/order/{{this.id}}">
             查看訂單
           </a>
         </button>
-        <button type="button" class="btn btn-link">
-          <a class="btn btn-link link-primary" href="/user/order/{{this.id}}/edit">
-            編輯訂單
-          </a>
-        </button>
-        <form action="/admin/restaurants/{{this.id}}?_method=DELETE" method="POST" style="display: inline;">
+        <form action="/user/order/{{this.id}}?_method=DELETE" method="POST" style="display: inline;">
           <button type="submit" class="btn btn-link link-danger"
             onclick="return confirm(`確定要刪除 {{ this.name }} 嗎？`)">刪除訂單</button>
         </form>

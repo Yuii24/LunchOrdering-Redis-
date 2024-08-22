@@ -3,16 +3,19 @@
   {{personalorder.restaurantName}}
 </h2>
 <br>
-<h5>
+<P>
   訂購日: {{personalorder.formattedDate}}
-</h5>
-<h5>
+</P>
+<p>
   訂購人: {{personalorder.name}}
-</h5>
-<h5>
+</p>
+<p>
   員工編號: {{personalorder.employeeId}}
-</h5>
+</p>
 <br />
+<p>
+  總金額: {{ totalprice.totalprice }}
+</p>
 <table class="table align-middle">
   <thead class="thead-dark">
     <tr>
@@ -36,7 +39,7 @@
             編輯訂單
           </a>
         </button>
-        <form action="/admin/restaurants/{{this.id}}?_method=DELETE" method="POST" style="display: inline;">
+        <form action="/user/mealorder/{{this.id}}?_method=DELETE" method="POST" style="display: inline;">
           <button type="submit" class="btn btn-link link-danger"
             onclick="return confirm(`確定要刪除 {{ this.meals }} 嗎？`)">刪除訂單</button>
         </form>

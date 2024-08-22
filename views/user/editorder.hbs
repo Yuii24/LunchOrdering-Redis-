@@ -1,0 +1,37 @@
+<form action="/user/order/{{meals.id}}?_method=PATCH" method="POST">
+  <div class="mb-4 text-center">
+    <h1 class="h3 font-weight-normal mb-3">變更點餐</h1>
+  </div>
+  <div>
+    <h1>{{restaurant.name}}</h1>
+    <p>{{restaurant.tel}}</p>
+    <p>{{restaurant.address}}</p>
+  </div>
+
+  <table class="table align-middle">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col" style="width: 20%">產品</th>
+        <th scope="col" style="width: 20%">價格</th>
+        <th scope="col" style="width: 30%">數量</th>
+        <th scope="col">說明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{meals.meals}}</td>
+        <td>{{meals.price}}</td>
+        <td>
+          <input class="form-control" type="number" name="quantity" placeholder="請輸入數量" value="{{meals.quantity}}">
+          </div>
+        </td>
+        <td>
+          <input class="form-control" type="text" name="description" placeholder="請輸入說明" value="{{meals.description}}">
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <button type="submit" class="btn btn-primary">送出</button>
+  <a class="btn btn-outline-secondary" href="/user/order/{{meals.personalorderId}}">Back</a>
+</form>

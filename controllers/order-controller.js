@@ -133,7 +133,8 @@ const orderController = {
         personalorderId: personalorder.id,
         orderId: orderId,
         name: name,
-        employeeId: employeeId
+        employeeId: employeeId,
+        restaurantName: restaurant.name
       }));
 
       await Mealorder.bulkCreate(mealorderData)
@@ -243,24 +244,37 @@ const orderController = {
         attributes: [
           'name',
           'meals',
-          'description'
+          'description',
+          'restaurantName'
         ],
         group: ['meals', 'description'],
         raw: true,
         nest: true
       })
 
-      const personalorder = await Personalorder.findOne({
+      const meals = await Mealorder.findOne({
         where: {
           orderId: orderId
+        },
+        attributes: [
+          'restaurantName',
+          [sequelize.fn('SUM', sequelize.col('mealtotal')), 'total_price']
+        ],
+        raw: true,
+        nest: true
+      })
+
+      const Rest = await Restaurant.findOne({
+        where: {
+          name: meals.restaurantName
         },
         raw: true,
         nest: true
       })
 
-      console.log('personalorder', personalorder)
+      console.log('Rest', Rest)
 
-      res.render('orderinfo', { mealsitem, mealsitemEachperson, mealsdescription, personalorder })
+      res.render('orderinfo', { mealsitem, mealsitemEachperson, mealsdescription, meals, Rest })
 
 
     }

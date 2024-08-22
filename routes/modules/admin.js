@@ -20,6 +20,6 @@ router.delete('/meals/:id', authenticatedAdmin, adminController.deleteMeal)
 router.get('/allorders', authenticatedAdmin, adminController.getAllOrders)
 router.get('/dailyorder/:date', authenticatedAdmin, adminController.getDailyOrder)
 
-router.get('', (req, res) => res.redirect('/admin/allorders'))
+router.get('', (req, res) => res.redirect('/admin/restaurants'))
 
 module.exports = router

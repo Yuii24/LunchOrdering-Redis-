@@ -1,18 +1,16 @@
 <br>
 <h2>
-  {{personalorder.restaurantName}}
-  {{#multiply 5 6}}
-  {{/multiply}}
+  {{Rest.name}}
 </h2>
 <br>
+<p>
+  電話: {{Rest.tel}}
+  <br>
+  地址: {{Rest.address}}
+</p>
+<br>
 <h5>
-  訂購日: {{personalorder.formattedDate}}
-</h5>
-<h5>
-  訂購人: {{personalorder.name}}
-</h5>
-<h5>
-  員工編號: {{personalorder.employeeId}}
+  總金額: $ {{meals.total_price}}
 </h5>
 <br />
 <table class="table align-middle">
