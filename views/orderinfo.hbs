@@ -14,6 +14,7 @@
 </h5>
 <br />
 {{#if user.isAdmin}}
+{{#if order.isOpen}}
 <div class="container">
   <div class="d-flex justify-content-end mb-3 d-flex-gap">
     <form action="/admin/order/{{orderId}}?_method=PATCH" method="POST" style="display: inline;">
@@ -21,6 +22,15 @@
     </form>
   </div>
 </div>
+{{else}}
+<div class="container">
+  <div class="d-flex justify-content-end mb-3 d-flex-gap">
+    <form action="/admin/order/{{orderId}}?_method=PATCH" method="POST" style="display: inline;">
+      <button type="submit" class="btn btn-secondary" onclick="return confirm(`確定要關閉訂餐嗎？`)">重新開啟訂餐</button>
+    </form>
+  </div>
+</div>
+{{/if}}
 {{/if}}
 <table class="table align-middle">
   <thead class="thead-dark">

@@ -10,7 +10,6 @@ router.get('/restaurants/create', authenticatedAdmin, adminController.createRest
 router.get('/restaurants/:id', authenticatedAdmin, adminController.getRestaurant)
 router.get('/restaurants/:id/edit', authenticatedAdmin, adminController.editRestaurant)
 router.get('/restaurants', authenticatedAdmin, adminController.getRestaurants)
-// router.get('/restaurants/:id/test', authenticatedAdmin, adminController.closeOrder)
 router.put('/restaurants/:id', authenticatedAdmin, adminController.putRestaurant)
 router.post('/restaurants/:id', authenticatedAdmin, adminController.openOrder)
 router.post('/restaurants', authenticatedAdmin, adminController.psotRestaurants)
