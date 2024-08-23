@@ -19,17 +19,17 @@
       <td>
         <button type="button" class="btn btn-link">
           <a class="btn btn-link link-primary" href="/restaurants/{{this.id}}">
-            Show
+            查看餐廳資料
           </a>
         </button>
         <button type="button" class="btn btn-link">
           <a class="btn btn-link link-primary" href="/admin/restaurants/{{this.id}}/edit">
-            Edit
+            編輯餐廳
           </a>
         </button>
         <form action="/admin/restaurants/{{this.id}}?_method=DELETE" method="POST" style="display: inline;">
           <button type="submit" class="btn btn-link link-danger"
-            onclick="return confirm(`確定要刪除 {{ this.name }} 嗎？`)">Delete</button>
+            onclick="return confirm(`確定要刪除 {{ this.name }} 嗎？`)">刪除餐廳</button>
         </form>
       </td>
     </tr>

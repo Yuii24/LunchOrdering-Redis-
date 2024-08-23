@@ -14,9 +14,18 @@
     <label class="form-label" for="address">地址</label>
     <input class="form-control" type="text" name="address" id="address" placeholder="請輸入店家地址">
   </div>
-  <div class="form-row mb-3">
+  <div class="row mb-3">
     <label class="form-label" for="description">請設定餐點</label>
-    <textarea class="form-control" id="description" name="description" rows="16" placeholder="請設定餐點"></textarea>
+    <div class="col-md-6">
+      <textarea class="form-control" id="description" name="description" rows="16" placeholder="請設定餐點"></textarea>
+    </div>
+    <div class="col-md-6">
+      <textarea class="form-control" id="description" name="description" rows="16" disabled="disabled">// 這邊是範例 //
+// 餐點,金額 //
+雞肉飯,50
+鴨肉飯,60
+      </textarea>
+    </div>
   </div>
   <button type="submit" class="btn btn-primary">送出</button>
   <a class="btn btn-outline-secondary" href="javascript:history.back()">Back</a>

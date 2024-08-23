@@ -11,11 +11,15 @@ router.get('/restaurants/:id', authenticatedAdmin, adminController.getRestaurant
 router.get('/restaurants/:id/edit', authenticatedAdmin, adminController.editRestaurant)
 router.get('/restaurants', authenticatedAdmin, adminController.getRestaurants)
 router.put('/restaurants/:id', authenticatedAdmin, adminController.putRestaurant)
-router.post('/restaurants/:id', authenticatedAdmin, adminController.openOrder)
+// 
+router.post('/newrestaurantsorder/:id', authenticatedAdmin, adminController.openOrder)
+router.get('/newrestaurantsorder/:id', authenticatedAdmin, adminController.getNewRestOrder)
+// 
 router.post('/restaurants', authenticatedAdmin, adminController.psotRestaurants)
 router.delete('/meals/:id', authenticatedAdmin, adminController.deleteMeal)
 
-router.patch('/order/:id', authenticatedAdmin, adminController.closeOrder)
+router.patch('/closeorder/:id', authenticatedAdmin, adminController.closeOrder)
+router.patch('/reopenorder/:id', authenticatedAdmin, adminController.reopenOrder)
 
 // router.get('/closeorder', authenticatedAdmin, adminController.getCloseOrder)
 

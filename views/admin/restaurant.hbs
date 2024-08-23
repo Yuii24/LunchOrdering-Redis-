@@ -7,13 +7,13 @@
 <a href='/admin/restaurants/{{restaurant.id}}/edit'>
   <button type="button" class="btn btn-primary">變更餐廳資料</button>
 </a>
-<form action="/admin/restaurants/{{restaurant.id}}" method="POST" style="display: inline;">
+<a href='/admin/newrestaurantsorder/{{restaurant.id}}'>
+  <button type="button" class="btn btn-primary">新增一筆訂單</button>
+</a>
+{{!-- <form action="/admin/newrestaurantsorder/{{restaurant.id}}" method="POST" class="ms-2" style="display: inline;">
   <button type="submit" class="btn btn-primary"
     onclick="return confirm(`是否要開放 {{ restaurant.name }} 訂餐嗎？`)">開放訂餐</button>
-</form>
-<a href='/admin/restaurants/{{restaurant.id}}/test'>
-  <button type="button" class="btn btn-primary">變更餐廳資料</button>
-</a>
+</form> --}}
 <br />
 <br />
 <table class="table align-middle">

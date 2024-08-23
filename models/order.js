@@ -24,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     employeeId: DataTypes.INTEGER,
     restaurantId: DataTypes.INTEGER,
-    isOpen: DataTypes.BOOLEAN
+    isOpen: DataTypes.BOOLEAN,
+    ordername: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Order',

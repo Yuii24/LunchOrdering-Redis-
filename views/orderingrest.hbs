@@ -5,6 +5,7 @@
 <table class="table align-middle">
   <thead class="thead-dark">
     <tr>
+      <th scope="col">訂單名稱</th>
       <th scope="col">餐廳名稱</th>
       <th scope="col">訂單發起人</th>
       <th scope="col">發起人員工編號</th>
@@ -14,9 +15,10 @@
   <tbody>
     {{#each orders}}
     <tr>
+      <td>{{this.ordername}}</td>
       <td>{{this.Restaurant.name}}</td>
-      <td>{{this.Restaurant.name}}</td>
-      <td>{{this.Restaurant.name}}</td>
+      <td>{{this.name}}</td>
+      <td>{{this.employeeId}}</td>
       <td>
         <button type="button" class="btn btn-link">
           <a class="btn btn-link link-primary" href="/orderpage/{{this.id}}">

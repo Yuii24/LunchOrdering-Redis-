@@ -9,7 +9,10 @@ const orderController = {
       where: {
         isOpen: true
       },
-      include: [Restaurant]
+      include: [Restaurant],
+      order: [
+        ['createdAt', 'DESC']
+      ]
     })
       .then(orders => {
         const orderDate = orders.map(orders => orders.toJSON())

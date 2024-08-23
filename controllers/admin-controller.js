@@ -15,7 +15,6 @@ const adminController = {
   },
   getDailyOrder: (req, res, next) => {
     const date = req.params.date
-    console.log('date', date)
     const today = new Date();
     const startOfDay = `${date} 00:00:00`;
     const endOfDay = `${date} 23:59:59`;
@@ -34,7 +33,6 @@ const adminController = {
         res.render('admin/dailyOrder', { order })
       })
       .catch(err => {
-        console.log(err)
         next(err)
       })
   },
@@ -70,14 +68,13 @@ const adminController = {
       const menuItemsData = descriptionArray.map(item => ({
         meals: item.productName,
         price: item.price,
-        restaurantId: restaurant.id // 关联的restaurantId
+        restaurantId: restaurant.id
       }));
 
       await Meal.bulkCreate(menuItemsData);
 
 
       res.redirect('/admin/restaurants')
-      // res.status(201).json({ message: 'Restaurant and menu items created successfully', restaurant });
     } catch (err) {
       next(err);
     }
@@ -256,21 +253,19 @@ const adminController = {
       .catch(err => next(err))
   },
   openOrder: (req, res, next) => {
-    let restId = req.params.id
-    restId = Number(restId)
+    const restId = req.params.id
 
-    console.log('restId', restId)
-
+    const { name, employeeId, ordername } = req.body
     Restaurant.findByPk(restId)
       .then((restaurant) => {
         if (!restaurant) throw new Error("此餐廳不存在!")
-        console.log("restaurant", restaurant)
 
         return Order.create({
-          name: req.user.name,
-          employeeId: req.user.employeeId,
+          name: name,
+          employeeId: employeeId,
           restaurantId: restId,
-          isOpen: true
+          isOpen: true,
+          ordername: ordername
         })
       })
       .then(() => {
@@ -284,9 +279,6 @@ const adminController = {
 
     try {
       const order = await Order.findByPk(orderId)
-
-      console.log('close', order)
-      console.log('closeId', order.isOpen)
 
       if (!order.isOpen) throw new Error('這個訂單並未開放!')
 
@@ -305,12 +297,44 @@ const adminController = {
       where: {
         isOpen: false
       },
-      include: [Restaurant]
+      include: [Restaurant],
+      order: [
+        ['createdAt', 'DESC']
+      ]
     })
       .then(orders => {
         const orderDate = orders.map(orders => orders.toJSON())
         return res.render('admin/backOrder', { orders: orderDate })
       })
+  },
+  reopenOrder: async (req, res, next) => {
+    const orderId = req.params.id
+
+    try {
+      const order = await Order.findByPk(orderId)
+
+      if (order.isOpen) throw new Error('這個訂單並未關閉!')
+
+      await order.update({
+        isOpen: true
+      })
+
+      req.flash('success_messages', '訂單已經開啟')
+      res.redirect('/orderingrest')
+    } catch (err) {
+      next(err)
+    }
+  },
+  getNewRestOrder: async (req, res, next) => {
+    const restId = req.params.id
+
+    const restaurant = await Restaurant.findByPk(restId, {
+      raw: true,
+      nest: true
+    })
+    if (!restaurant) throw new Error("此餐廳不存在!")
+
+    res.render('admin/newRestOrder', { restaurant })
   }
 }
 
