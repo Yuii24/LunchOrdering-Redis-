@@ -1,9 +1,7 @@
+{{> order-tabs route='restaurants'}}
 <br>
 <a href='/admin/restaurants/create'>
   <button type="button" class="btn btn-primary">新增餐廳</button>
-</a>
-<a href='/admin/closeorder'>
-  <button type="button" class="btn btn-primary">查看關閉訂單</button>
 </a>
 <br />
 <br />
@@ -20,7 +18,7 @@
       <td>{{this.name}}</td>
       <td>
         <button type="button" class="btn btn-link">
-          <a class="btn btn-link link-primary" href="/admin/restaurants/{{this.id}}">
+          <a class="btn btn-link link-primary" href="/restaurants/{{this.id}}">
             Show
           </a>
         </button>

@@ -1,15 +1,21 @@
-<h1>進行中的訂單</h1>
+{{> order-tabs route='index'}}
 
+<h3>進行中的訂單</h3>
+<br>
 <table class="table align-middle">
   <thead class="thead-dark">
     <tr>
-      <th scope="col">Name</th>
+      <th scope="col">餐廳名稱</th>
+      <th scope="col">訂單發起人</th>
+      <th scope="col">發起人員工編號</th>
       <th scope="col"></th>
     </tr>
   </thead>
   <tbody>
     {{#each orders}}
     <tr>
+      <td>{{this.Restaurant.name}}</td>
+      <td>{{this.Restaurant.name}}</td>
       <td>{{this.Restaurant.name}}</td>
       <td>
         <button type="button" class="btn btn-link">

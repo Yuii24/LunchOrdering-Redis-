@@ -22,7 +22,8 @@
       <th scope="col" style="width: 12%">餐點</th>
       <th scope="col" style="width: 10%">單價</th>
       <th scope="col" style="width: 10%">數量</th>
-      <th scope="col" style="width: 40%">金額</th>
+      <th scope="col" style="width: 10%">金額</th>
+      <th scope="col" style="width: 30%">說明</th>
       <th scope="col"></th>
     </tr>
   </thead>
@@ -33,6 +34,7 @@
       <td>{{this.price}}</td>
       <td>{{this.quantity}}</td>
       <td>{{this.mealtotal}}</td>
+      <td>{{this.description}}</td>
       <td>
         <button type="button" class="btn btn-link">
           <a class="btn btn-link link-primary" href="/user/order/{{this.id}}/edit">

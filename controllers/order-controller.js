@@ -112,7 +112,7 @@ const orderController = {
     const orderId = req.params.id
 
     try {
-      const [mealsitem, mealsitemEachperson, mealsdescription, meals, order] = await Promise.all([
+      const [mealsitem, mealsitemEachperson, mealsdescription, order] = await Promise.all([
         // 計算每個產品的數量
         Mealorder.findAll({
           where: {
@@ -135,7 +135,7 @@ const orderController = {
           attributes: [
             'name',
             'meals',
-            [sequelize.fn('SUM', sequelize.col('quantity')), 'total_sold']
+            [sequelize.fn('SUM', sequelize.col('quantity')), 'personal_quantity']
           ],
           group: ['name', 'meals'],
           raw: true,
@@ -154,19 +154,7 @@ const orderController = {
           raw: true,
           nest: true
         }),
-        // 查詢每個品項的金額
-        Mealorder.findOne({
-          where: {
-            orderId: orderId
-          },
-          attributes: [
-            'restaurantName',
-            [sequelize.fn('SUM', sequelize.col('mealtotal')), 'total_price']
-          ],
-          raw: true,
-          nest: true
-        }),
-        // 透過訂單編號查詢是否開啟訂餐與後續使厚餐廳資料
+        // 透過訂單編號查詢是否開啟訂餐與後續使用餐廳資料
         Order.findByPk(orderId, {
           include: [Restaurant],
           raw: true,
@@ -174,88 +162,21 @@ const orderController = {
         })
       ])
 
+      // 透過每個產品的數量和單品價個計算訂單總金額
+      const totalprice = mealsitem.reduce((acc, item) => {
+        const itemprice = item.price * item.total_sold;
+        return acc + itemprice;
+      }, 0)
+
+      // 取得餐廳資料
+      console.log('order', order)
       const Rest = order.Restaurant
 
-      res.render('orderinfo', { mealsitem, mealsitemEachperson, mealsdescription, meals, Rest, orderId, order })
+      res.render('orderinfo', { mealsitem, mealsitemEachperson, mealsdescription, Rest, totalprice, orderId, order })
     }
     catch (err) {
       next(err)
     }
-
-
-    /*
-    try {
-      // 計算每個產品的數量
-      const mealsitem = await Mealorder.findAll({
-        where: {
-          orderId
-        },
-        attributes: [
-          'meals',
-          'price',
-          [sequelize.fn('SUM', sequelize.col('quantity')), 'total_sold']
-        ],
-        group: ['meals'],
-        raw: true,
-        nest: true
-      })
-
-      // 計算每個人買個產品的購買數量
-      const mealsitemEachperson = await Mealorder.findAll({
-        where: {
-          orderId
-        },
-        attributes: [
-          'name',
-          'meals',
-          [sequelize.fn('SUM', sequelize.col('quantity')), 'total_sold']
-        ],
-        group: ['name', 'meals'],
-        raw: true,
-        nest: true
-      })
-
-      // 查詢每個用戶的訂餐跟說明
-      const mealsdescription = await Mealorder.findAll({
-        where: {
-          orderId
-        },
-        attributes: [
-          'name',
-          'meals',
-          'description',
-        ],
-        group: ['meals', 'description'],
-        raw: true,
-        nest: true
-      })
-
-      // 查詢每個品項的金額
-      const meals = await Mealorder.findOne({
-        where: {
-          orderId: orderId
-        },
-        attributes: [
-          'restaurantName',
-          [sequelize.fn('SUM', sequelize.col('mealtotal')), 'total_price']
-        ],
-        raw: true,
-        nest: true
-      })
-
-      // 透過訂單編號查詢是否開啟訂餐與後續使厚餐廳資料
-      const order = await Order.findByPk(orderId, {
-        include: [Restaurant],
-        raw: true,
-        nest: true
-      })
-      const Rest = order.Restaurant
-
-      res.render('orderinfo', { mealsitem, mealsitemEachperson, mealsdescription, meals, Rest, orderId, order })
-    }
-    catch (err) {
-      next(err)
-    }*/
   },
 }
 module.exports = orderController

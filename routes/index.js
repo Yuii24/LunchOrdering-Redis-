@@ -9,6 +9,7 @@ const passport = require('../config/passport')
 
 const orderController = require('../controllers/order-controller')
 const userController = require('../controllers/user-controller')
+const adminController = require('../controllers/admin-controller')
 
 const { generalErrorHandler } = require('../middlewares/error-handler')
 
@@ -23,12 +24,13 @@ router.post('/signin', passport.authenticate('local', { failureRedirect: '/signi
 
 router.get('/logout', userController.logout)
 
-
+// 前台訂單路由
 router.get('/orderingrest/:id/info', authenticated, orderController.getOrderInfo)
 router.get('/orderingrest', authenticated, orderController.getOrderingRest)
 router.get('/orderpage/:id', authenticated, orderController.getOrderPage)
 router.post('/orderpage/:id', authenticated, orderController.postOrdering)
 
+// 使用者訂單路由
 router.get('/user/orders', authenticated, userController.getOrders)
 router.delete('/user/order/:id', authenticated, userController.deleteOrder)
 
@@ -39,6 +41,13 @@ router.delete('/user/mealorder/:id', authenticated, userController.deleteMeal)
 
 // router.get('/ordering', authenticated, orderController.createOrder)
 // router.post('/ordering', authenticated, orderController.postOrder)
+
+// 餐廳路由
+router.get('/restaurants', authenticated, adminController.getRestaurants)
+router.get('/restaurants/:id', authenticated, adminController.getRestaurant)
+
+// 後台訂單路由
+router.get('/closeorder', authenticated, adminController.getCloseOrder)
 
 router.get('/', (req, res) => {
   res.redirect('/orderingrest')

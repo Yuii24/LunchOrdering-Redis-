@@ -17,7 +17,7 @@ router.delete('/meals/:id', authenticatedAdmin, adminController.deleteMeal)
 
 router.patch('/order/:id', authenticatedAdmin, adminController.closeOrder)
 
-router.get('/closeorder', authenticatedAdmin, adminController.getCloseOrder)
+// router.get('/closeorder', authenticatedAdmin, adminController.getCloseOrder)
 
 
 router.get('/allorders', authenticatedAdmin, adminController.getAllOrders)

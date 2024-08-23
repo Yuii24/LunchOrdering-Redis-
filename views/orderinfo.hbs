@@ -10,7 +10,7 @@
 </p>
 <br>
 <h5>
-  總金額: $ {{meals.total_price}}
+  總金額: $ {{totalprice}}
 </h5>
 <br />
 {{#if user.isAdmin}}
@@ -52,7 +52,7 @@
       <td>
         {{#each ../mealsitemEachperson}}
         {{#ifCond this.meals ../this.meals}}
-        {{#forLoop this.total_sold}}
+        {{#forLoop this.personal_quantity}}
         <button type="button" class="btn btn-secondary" disabled>{{../this.name}}</button>
         {{/forLoop}}
         {{/ifCond}}
