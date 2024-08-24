@@ -252,6 +252,9 @@ const adminController = {
     if (!restaurant) throw new Error("此餐廳不存在!")
 
     res.render('admin/newRestOrder', { restaurant })
+  },
+  getAdminBack: (req, res, next) => {
+    return res.render('admin/adminback')
   }
 }
 

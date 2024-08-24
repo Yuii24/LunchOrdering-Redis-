@@ -97,4 +97,8 @@
     {{/each}}
   </tbody>
 </table>
+{{#if order.isOpen}}
 <a class="btn btn-outline-secondary" href="/orderingrest">Back</a>
+{{else}}
+<a class="btn btn-outline-secondary" href="/closeorder">Back</a>
+{{/if}}

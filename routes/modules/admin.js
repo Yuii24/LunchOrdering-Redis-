@@ -6,6 +6,7 @@ const { authenticatedAdmin } = require('../../middlewares/auth')
 
 const adminController = require('../../controllers/admin-controller')
 
+router.get('/adminback', authenticatedAdmin, adminController.getAdminBack)
 
 router.get('/restaurants/create', authenticated, adminController.createRestaurants)
 router.get('/restaurants/:id', authenticated, adminController.getRestaurant)
@@ -26,6 +27,6 @@ router.patch('/reopenorder/:id', authenticated, adminController.reopenOrder)
 // router.get('/allorders', authenticated, adminController.getAllOrders)
 // router.get('/dailyorder/:date', authenticated, adminController.getDailyOrder)
 
-router.get('', (req, res) => res.redirect('/admin/restaurants'))
+router.get('', (req, res) => res.redirect('/admin/adminback'))
 
 module.exports = router
