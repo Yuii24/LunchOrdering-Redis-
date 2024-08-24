@@ -23,10 +23,6 @@ router.delete('/meals/:id', authenticated, adminController.deleteMeal)
 router.patch('/closeorder/:id', authenticated, adminController.closeOrder)
 router.patch('/reopenorder/:id', authenticated, adminController.reopenOrder)
 
-
-// router.get('/allorders', authenticated, adminController.getAllOrders)
-// router.get('/dailyorder/:date', authenticated, adminController.getDailyOrder)
-
 router.get('', (req, res) => res.redirect('/admin/adminback'))
 
 module.exports = router

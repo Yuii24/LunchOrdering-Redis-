@@ -27,10 +27,11 @@
             編輯餐廳
           </a>
         </button>
-        <form action="/admin/restaurants/{{this.id}}?_method=DELETE" method="POST" style="display: inline;">
+        {{!-- 這個功能暫時不開放 --}}
+        {{!-- <form action="/admin/restaurants/{{this.id}}?_method=DELETE" method="POST" style="display: inline;">
           <button type="submit" class="btn btn-link link-danger"
             onclick="return confirm(`確定要刪除 {{ this.name }} 嗎？`)">刪除餐廳</button>
-        </form>
+        </form> --}}
       </td>
     </tr>
     {{/each}}
