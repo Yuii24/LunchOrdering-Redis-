@@ -81,74 +81,16 @@ const userController = {
         const day = date.getDate()
         const formattedDate = `${year}年${month}月${day}日`
 
-        console.log('date', date)
-
         return {
           ...porder,
           formattedDate
         }
       })
-
-      // const personalorder = await Personalorder.findOne({
-      //   where: {
-      //     personalorderId: porders.id,
-      //     employeeId: employeeId
-      //   },
-      //   attributes: [
-      //     [sequelize.fn('SUM', sequelize.col('mealtotal')), 'total_price']
-      //   ],
-      //   raw: true,
-      //   nest: true
-      // })
       const pordersid = porders.map(order => order.id)
-      console.log('porders', porders)
-      console.log('porders.id', pordersid)
       return res.render('user/orders', { porders })
     } catch (err) {
       next(err)
     }
-    // sequelize.query("SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC", { replacements: [userId], type: sequelize.QueryTypes.SELECT })
-    //   .then((orders) => {
-    //     orders = orders.map(order => {
-    //       const date = new Date(order.created_at)
-    //       const year = date.getFullYear() - 1911
-    //       const month = date.getMonth() + 1
-    //       const day = date.getDate()
-    //       const formattedDate = `${year}年${month}月${day}日`
-
-    //       return {
-    //         ...order,
-    //         description: order.description.substring(0, 50),
-    //         formattedDate
-    //       }
-    //     })
-    //     return res.render('user/orders', { orders })
-    //   })
-    //   .catch(err => next(err))
-
-
-
-    // return Order.findAll({
-    //   raw: true,
-    //   nest: true
-    // })
-    //   .then((orders) => {
-    //     orders = orders.map(order => {
-    //       const date = new Date(order.createdAt)
-    //       const year = date.getFullYear() - 1911
-    //       const month = date.getMonth() + 1
-    //       const day = date.getDate()
-    //       const formattedDate = `${year}年${month}月${day}日`
-    //       return {
-    //         ...order,
-    //         formattedDate
-    //       }
-    //     })
-
-    //     console.log('orders', orders)
-    //     return res.render('user/orders', { orders })
-    //   })
-    //   .catch(err => next(err))
   },
   getOrder: async (req, res, next) => {
     const poId = req.params.id
@@ -195,41 +137,28 @@ const userController = {
       next(err)
     }
   },
-  /*
-    const orderId = req.params.id
-    Order.findByPk(orderId, { raw: true })
-      .then(order => {
-        if (!order) throw new Error("此訂單不存在")
- 
-        res.render('user/order', { order })
-      })
-      .catch(err => next(err))*/
   editOrder: async (req, res, next) => {
     const mealorderId = req.params.id
 
     try {
       const meals = await Mealorder.findByPk(mealorderId, {
+        include: [Order],
         raw: true,
         nest: true
       })
 
-      console.log('meals', meals)
+      const order = meals.Order
+
+      if (!order.isOpen) {
+        req.flash('error_messages', '這筆訂單已經關閉，不能在變更餐點了!')
+        return res.redirect(`/user/order/${meals.personalorderId}`)
+      }
 
       res.render('user/editorder', { meals })
-
     } catch (err) {
       next(err)
     }
-    /*
-    
-    Order.findByPk(orderId, { raw: true })
-      .then(order => {
-        if (!order) throw new Error("此訂單不存在")
-
-        res.render('user/edit-order', { order })
-      })
-      .catch(err => next(err))
-*/  },
+  },
   patchMeal: async (req, res, next) => {
     const mealorderId = req.params.id
     const { quantity, description } = req.body
@@ -240,9 +169,6 @@ const userController = {
       if (!mealorder) throw new Error('餐點並不存在')
 
       const totalprice = mealorder.price * quantity
-
-      console.log('mealorder', mealorder)
-      console.log('totalprice', totalprice)
 
 
       await mealorder.update({
@@ -256,7 +182,6 @@ const userController = {
     } catch (err) {
       next(err)
     }
-
   },
   deleteMeal: async (req, res, next) => {
     const mealorderId = req.params.id

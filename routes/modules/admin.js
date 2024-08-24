@@ -1,31 +1,30 @@
 const express = require('express')
 const router = express.Router()
 
+const { authenticated } = require('../../middlewares/auth')
 const { authenticatedAdmin } = require('../../middlewares/auth')
 
 const adminController = require('../../controllers/admin-controller')
 
 
-router.get('/restaurants/create', authenticatedAdmin, adminController.createRestaurants)
-router.get('/restaurants/:id', authenticatedAdmin, adminController.getRestaurant)
-router.get('/restaurants/:id/edit', authenticatedAdmin, adminController.editRestaurant)
-router.get('/restaurants', authenticatedAdmin, adminController.getRestaurants)
-router.put('/restaurants/:id', authenticatedAdmin, adminController.putRestaurant)
+router.get('/restaurants/create', authenticated, adminController.createRestaurants)
+router.get('/restaurants/:id', authenticated, adminController.getRestaurant)
+router.get('/restaurants/:id/edit', authenticated, adminController.editRestaurant)
+router.get('/restaurants', authenticated, adminController.getRestaurants)
+router.put('/restaurants/:id', authenticated, adminController.putRestaurant)
 // 
-router.post('/newrestaurantsorder/:id', authenticatedAdmin, adminController.openOrder)
-router.get('/newrestaurantsorder/:id', authenticatedAdmin, adminController.getNewRestOrder)
+router.post('/newrestaurantsorder/:id', authenticated, adminController.openOrder)
+router.get('/newrestaurantsorder/:id', authenticated, adminController.getNewRestOrder)
 // 
-router.post('/restaurants', authenticatedAdmin, adminController.psotRestaurants)
-router.delete('/meals/:id', authenticatedAdmin, adminController.deleteMeal)
+router.post('/restaurants', authenticated, adminController.psotRestaurants)
+router.delete('/meals/:id', authenticated, adminController.deleteMeal)
 
-router.patch('/closeorder/:id', authenticatedAdmin, adminController.closeOrder)
-router.patch('/reopenorder/:id', authenticatedAdmin, adminController.reopenOrder)
-
-// router.get('/closeorder', authenticatedAdmin, adminController.getCloseOrder)
+router.patch('/closeorder/:id', authenticated, adminController.closeOrder)
+router.patch('/reopenorder/:id', authenticated, adminController.reopenOrder)
 
 
-router.get('/allorders', authenticatedAdmin, adminController.getAllOrders)
-router.get('/dailyorder/:date', authenticatedAdmin, adminController.getDailyOrder)
+// router.get('/allorders', authenticated, adminController.getAllOrders)
+// router.get('/dailyorder/:date', authenticated, adminController.getDailyOrder)
 
 router.get('', (req, res) => res.redirect('/admin/restaurants'))
 

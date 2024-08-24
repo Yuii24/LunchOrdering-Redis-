@@ -39,9 +39,6 @@ router.get('/user/order/:id/edit', authenticated, userController.editOrder)
 router.patch('/user/order/:id', authenticated, userController.patchMeal)
 router.delete('/user/mealorder/:id', authenticated, userController.deleteMeal)
 
-// router.get('/ordering', authenticated, orderController.createOrder)
-// router.post('/ordering', authenticated, orderController.postOrder)
-
 // 餐廳路由
 router.get('/restaurants', authenticated, adminController.getRestaurants)
 router.get('/restaurants/:id', authenticated, adminController.getRestaurant)
