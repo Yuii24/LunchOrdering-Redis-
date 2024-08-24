@@ -50,7 +50,7 @@ const userController = {
           }))
           .then(() => {
             req.flash('success_messages', '註冊成功')
-            res.redirect('signin')
+            res.redirect('/admin/adminback')
           })
           .catch(err => next(err))
       })

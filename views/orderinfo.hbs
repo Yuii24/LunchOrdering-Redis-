@@ -35,7 +35,28 @@
   </div>
 </div>
 {{/if}}
+{{else}}
+{{#ifCond user.employeeId order.employeeId}}
+{{#if order.isOpen}}
+<div class="container">
+  <div class="d-flex justify-content-end mb-3 d-flex-gap">
+    <form action="/admin/closeorder/{{orderId}}?_method=PATCH" method="POST" style="display: inline;">
+      <button type="submit" class="btn btn-secondary" onclick="return confirm(`確定要關閉訂餐嗎？`)">關閉訂餐</button>
+    </form>
+  </div>
+</div>
+{{else}}
+<div class="container">
+  <div class="d-flex justify-content-end mb-3 d-flex-gap">
+    <form action="/admin/reopenorder/{{orderId}}?_method=PATCH" method="POST" style="display: inline;">
+      <button type="submit" class="btn btn-secondary" onclick="return confirm(`確定要關閉訂餐嗎？`)">重新開啟訂餐</button>
+    </form>
+  </div>
+</div>
 {{/if}}
+{{/ifCond}}
+{{/if}}
+
 <table class="table align-middle">
   <thead class="thead-dark">
     <tr>
