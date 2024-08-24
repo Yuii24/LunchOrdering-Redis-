@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const routes = require('./routes')
 const session = require('express-session')
@@ -8,9 +9,9 @@ const methodOverride = require('method-override')
 const handlebarsHelpers = require('./helpers/handlebars-helpers')
 const { engine } = require('express-handlebars')
 const app = express()
-const port = 3000
+const port = process.env.PORT || 3000
 
-const SESSION_SECRET = 'secret'
+const SESSION_SECRET = process.env.SESSION_SECRET
 
 app.engine('hbs', engine({ extname: '.hbs', helpers: handlebarsHelpers }))
 
