@@ -25,7 +25,7 @@ async function connectRedis() {
   }
 }
 
-// 导出客户端和连接函数
+// 倒出redis-helper
 module.exports = {
   client,
   connectRedis
