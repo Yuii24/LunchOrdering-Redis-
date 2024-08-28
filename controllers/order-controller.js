@@ -3,21 +3,72 @@ const { sequelize } = require('../models')
 const { Op } = require('sequelize');
 const bcrypt = require('bcrypt')
 
+
+const { client, connectRedis } = require('../helpers/redis-helper');
+
+
 const orderController = {
-  getOrderingRest: (req, res, next) => {
-    Order.findAll({
-      where: {
-        isOpen: true
-      },
-      include: [Restaurant],
-      order: [
-        ['createdAt', 'DESC']
-      ]
-    })
-      .then(orders => {
-        const orderDate = orders.map(orders => orders.toJSON())
-        return res.render('orderingrest', { orders: orderDate })
-      })
+  getOrderingRest: async (req, res, next) => {
+    try {
+      const cacheKey = 'orderingrest_data';
+
+      // 確認Redis連線
+      await connectRedis();
+
+      // 查看Redis是否有這筆資料
+      const cachedData = await client.get(cacheKey);
+
+      if (cachedData) {
+        // 如果有將直接回傳Redis資料
+        console.log('Data retrieved from Redis');
+        return res.render('orderingrest', { orders: JSON.parse(cachedData) });
+      }
+
+      // 如果沒有進入MySQL查詢
+      const orders = await Order.findAll({
+        attributes: ['id', 'name', 'employeeId', 'ordername'],
+        where: { isOpen: true },
+        include: [{
+          model: Restaurant,
+          attributes: ['name'],
+        }],
+        order: [['createdAt', 'DESC']],
+      });
+
+      const orderDate = orders.map(order => order.toJSON());
+      console.log('Data retrieved from MySQL:', orderDate);
+
+      // 將資料也傳入Redis，不設定過期時間
+      await client.set(cacheKey, JSON.stringify(orderDate));
+
+      return res.render('orderingrest', { orders: orderDate });
+    } catch (error) {
+      console.error('Error fetching ordering data:', error);
+      return next(error);
+    }
+    // Order.findAll({
+    //   attributes: [
+    //     'id',
+    //     'name',
+    //     'employeeId',
+    //     'ordername'
+    //   ],
+    //   where: {
+    //     isOpen: true
+    //   },
+    // include: [{
+    //   model: Restaurant,
+    //   attributes: ['name'],
+    // }],
+    //   order: [
+    //     ['createdAt', 'DESC']
+    //   ]
+    // })
+    //   .then(orders => {
+    //     const orderDate = orders.map(orders => orders.toJSON())
+    //     console.log('orderdata', orderDate)
+    //     return res.render('orderingrest', { orders: orderDate })
+    //   })
   },
   getOrderPage: (req, res, next) => {
     const orderId = req.params.id
@@ -103,6 +154,8 @@ const orderController = {
       }));
 
       await Mealorder.bulkCreate(mealorderData)
+
+
 
       req.flash('success_messages', '訂餐成功！')
       res.redirect(`/orderpage/${orderId}`)

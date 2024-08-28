@@ -2,6 +2,7 @@ const { Restaurant, Meal, sequelize } = require('../models')
 const { Order, User } = require('../models')
 const { Op } = require('sequelize');
 const bcrypt = require('bcrypt');
+const { client, connectRedis } = require('../helpers/redis-helper');
 
 
 const adminController = {
@@ -169,27 +170,30 @@ const adminController = {
       })
       .catch(err => next(err))
   },
-  openOrder: (req, res, next) => {
+  openOrder: async (req, res, next) => {
     const restId = req.params.id
 
-    const { name, employeeId, ordername } = req.body
-    Restaurant.findByPk(restId)
-      .then((restaurant) => {
-        if (!restaurant) throw new Error("此餐廳不存在!")
+    try {
+      const { name, employeeId, ordername } = req.body
+      const restaurant = await Restaurant.findByPk(restId)
 
-        return Order.create({
-          name: name,
-          employeeId: employeeId,
-          restaurantId: restId,
-          isOpen: true,
-          ordername: ordername
-        })
+      if (!restaurant) throw new Error("此餐廳不存在!")
+
+      await Order.create({
+        name: name,
+        employeeId: employeeId,
+        restaurantId: restId,
+        isOpen: true,
+        ordername: ordername
       })
-      .then(() => {
-        req.flash("success_messages", "已經開放訂單!")
-        return res.redirect(`/admin/restaurants/${restId}`)
-      })
-      .catch(err => next(err))
+      await client.del('orderingrest_data')
+      req.flash("success_messages", "已經開放訂單!")
+      console.log("client.del('orderingrest_data') completed")
+      return res.redirect(`/admin/restaurants/${restId}`)
+
+    } catch (err) {
+      next(err)
+    }
   },
   closeOrder: async (req, res, next) => {
     const orderId = req.params.id
