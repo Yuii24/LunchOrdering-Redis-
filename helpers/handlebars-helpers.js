@@ -11,5 +11,10 @@ module.exports = {
   },
   multiply: function (a, b) {
     return a * b
+  },
+  let: function (value, options) {
+    const context = Object.assign({}, this, options.hash);
+    context[options.hash.key] = value;
+    return options.fn(context);
   }
 }

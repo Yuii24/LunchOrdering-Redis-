@@ -14,7 +14,7 @@
 </p>
 <br>
 <h5>
-  總金額: $ {{totalprice}}
+  總金額: $ {{total}}
 </h5>
 <br />
 {{#if user.isAdmin}}
@@ -68,19 +68,15 @@
     </tr>
   </thead>
   <tbody>
+    {{#each mealsSummary}}
     <tr>
-      {{#each mealsitem}}
-      <th scope="row">{{this.meals}}</th>
-      <td>{{this.total_sold}}</td>
+      <th scope="row">{{@key}}</th>
+      <td>{{this.quantity}}</td>
       <td>{{this.price}}</td>
-      <td>{{#multiply this.total_sold this.price}}{{/multiply}}</td>
+      <td>{{this.totalPrice}}</td>
       <td>
-        {{#each ../mealsitemEachperson}}
-        {{#ifCond this.meals ../this.meals}}
-        {{#forLoop this.personal_quantity}}
-        <button type="button" class="btn btn-secondary" disabled>{{../this.name}}</button>
-        {{/forLoop}}
-        {{/ifCond}}
+        {{#each this.name}}
+        <button type="button" class="btn btn-secondary" disabled>{{this}}</button>
         {{/each}}
       </td>
     </tr>
@@ -103,11 +99,12 @@
   </thead>
   <tbody>
     <tr>
-      {{#each mealsitem}}
-      <th scope="row">{{this.meals}}</th>
+      {{#each mealsSummary}}
+      {{#let @key key="outerKey"}}
+      <th scope="row">{{outerKey}}</th>
       <td>
-        {{#each ../mealsdescription}}
-        {{#ifCond this.meals ../this.meals}}
+        {{#each ../../mealsdescription}}
+        {{#ifCond this.meals ../outerKey}}
         {{#if this.description}}
         {{this.name}}: {{this.description}}<br>
         {{/if}}
@@ -115,6 +112,7 @@
         {{/each}}
       </td>
     </tr>
+    {{/let}}
     {{/each}}
   </tbody>
 </table>
